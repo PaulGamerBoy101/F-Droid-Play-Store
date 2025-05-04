@@ -10,7 +10,7 @@
         "android.permission.INTERNET",
         "android.permission.ACCESS_NETWORK_STATE"
       ],
-      "icon": ""
+      "icon": "apps/icons/firefoxicon.webp"
     },
     {
       "name": "Chrome",
@@ -24,7 +24,7 @@
         "android.permission.WRITE_EXTERNAL_STORAGE",
         "android.permission.READ_EXTERNAL_STORAGE"
       ],
-      "icon": ""
+      "icon": "apps/icons/Chrome-icon.png"
     },
     {
       "name": "VLC",
