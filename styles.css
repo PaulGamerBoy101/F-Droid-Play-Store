@@ -141,6 +141,25 @@ header {
     left: 16px;
 }
 
+.status-message {
+    text-align: center;
+    padding: 16px;
+    font-size: 16px;
+    color: #202124;
+}
+
+.status-message.loading {
+    color: #1a73e8;
+}
+
+.status-message.success {
+    color: #00c853;
+}
+
+.status-message.error {
+    color: #d93025;
+}
+
 .hidden {
     display: none;
 }
