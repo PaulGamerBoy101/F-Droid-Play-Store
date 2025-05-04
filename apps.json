@@ -59,6 +59,132 @@
         "android.permission.FOREGROUND_SERVICE"
       ],
       "icon": "apps/icons/kdeconnect.webp"
+    },
+    {
+      "name": "Spotify",
+      "package": "com.spotify.music",
+      "version": "",
+      "download_url": "",
+      "categories": ["Music", "Media"],
+      "permissions": [],
+      "icon": ""
+    },
+    {
+      "name": "Youtube",
+      "package": "com.google.android.youtube",
+      "version": "",
+      "download_url": "",
+      "categories": ["Video", "Media"],
+      "permissions": [],
+      "icon": ""
+    },
+    {
+      "name": "Youtube Music",
+      "package": "com.google.android.apps.youtube.music",
+      "version": "",
+      "download_url": "",
+      "categories": ["Music", "Media"],
+      "permissions": [],
+      "icon": ""
+    },
+    {
+      "name": "Venmo",
+      "package": "com.venmo",
+      "version": "",
+      "download_url": "",
+      "categories": ["Finance", "Payments"],
+      "permissions": [],
+      "icon": ""
+    },
+    {
+      "name": "Libby",
+      "package": "com.overdrive.mobile.android.libby",
+      "version": "",
+      "download_url": "",
+      "categories": ["Books", "Reading"],
+      "permissions": [],
+      "icon": ""
+    },
+    {
+      "name": "Book's Story",
+      "package": "com.booksstory.reader",
+      "version": "",
+      "download_url": "",
+      "categories": ["Books", "Reading"],
+      "permissions": [],
+      "icon": ""
+    },
+    {
+      "name": "Wikipedia",
+      "package": "org.wikipedia",
+      "version": "",
+      "download_url": "",
+      "categories": ["Education", "Reference"],
+      "permissions": [],
+      "icon": ""
+    },
+    {
+      "name": "Proton VPN",
+      "package": "ch.protonvpn.android",
+      "version": "",
+      "download_url": "",
+      "categories": ["Security", "VPN"],
+      "permissions": [],
+      "icon": ""
+    },
+    {
+      "name": "Bitwarden",
+      "package": "com.x8bit.bitwarden",
+      "version": "",
+      "download_url": "",
+      "categories": ["Security", "Passwords"],
+      "permissions": [],
+      "icon": ""
+    },
+    {
+      "name": "Thunderbird For Android",
+      "package": "org.mozilla.thunderbird",
+      "version": "",
+      "download_url": "",
+      "categories": ["Email", "Communication"],
+      "permissions": [],
+      "icon": ""
+    },
+    {
+      "name": "FairEmail",
+      "package": "eu.faircode.email",
+      "version": "",
+      "download_url": "",
+      "categories": ["Email", "Communication"],
+      "permissions": [],
+      "icon": ""
+    },
+    {
+      "name": "Proton Mail",
+      "package": "ch.protonmail.android",
+      "version": "",
+      "download_url": "",
+      "categories": ["Email", "Security"],
+      "permissions": [],
+      "icon": ""
+    },
+    {
+      "name": "Pocket Maps",
+      "package": "net.sharewire.pocketmaps",
+      "version": "",
+      "download_url": "",
+      "categories": ["Navigation", "Offline Maps"],
+      "permissions": [],
+      "icon": ""
+    },
+    {
+      "name": "Google Maps",
+      "package": "com.google.android.apps.maps",
+      "version": "",
+      "download_url": "",
+      "categories": ["Navigation", "Maps"],
+      "permissions": [],
+      "icon": ""
     }
   ]
 }
