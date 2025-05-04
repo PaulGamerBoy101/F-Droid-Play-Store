@@ -1,0 +1,146 @@
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    margin: 0;
+    background-color: #f1f3f4;
+}
+
+header {
+    background-color: #fff;
+    padding: 10px 16px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    background-color: #f1f1f1;
+    border-radius: 24px;
+    padding: 8px 16px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+#search-bar {
+    flex: 1;
+    border: none;
+    background: none;
+    font-size: 16px;
+    outline: none;
+}
+
+#search-button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.app-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+    padding: 16px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.app-card {
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.app-card:hover {
+    transform: translateY(-4px);
+}
+
+.app-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: contain;
+    background: #f1f1f1;
+}
+
+.app-card h3 {
+    font-size: 16px;
+    margin: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.app-card p {
+    font-size: 14px;
+    color: #5f6368;
+    margin: 0 8px 8px;
+}
+
+.app-details {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #fff;
+    padding: 16px;
+    overflow-y: auto;
+    z-index: 20;
+}
+
+.app-details.visible {
+    display: block;
+}
+
+.app-details-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.app-details-header img {
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+    margin-right: 16px;
+}
+
+.app-details h2 {
+    font-size: 24px;
+    margin: 0;
+}
+
+.app-details .install-button {
+    background-color: #00c853;
+    color: #fff;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 16px 0;
+}
+
+.app-details .install-button:hover {
+    background-color: #00b140;
+}
+
+.back-button {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    position: absolute;
+    top: 16px;
+    left: 16px;
+}
+
+.hidden {
+    display: none;
+}
