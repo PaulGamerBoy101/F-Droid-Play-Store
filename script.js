@@ -1,88 +1,95 @@
-const CUSTOM_JSON = 'apps.json'; // Or change to your actual file path
-let allApps = [];
+let appsData = [];
+const appGrid = document.querySelector('.app-grid');
+const categoriesFooter = document.querySelector('.categories-footer');
+const categoriesContainer = document.createElement('div');
+categoriesContainer.classList.add('category-container');
+categoriesFooter.appendChild(categoriesContainer);
 
-function setStatus(message, type, retry = false) {
-    const statusDiv = document.getElementById('status-message');
-    statusDiv.innerHTML = message + (retry ? ' <button onclick="fetchApps()">Retry</button>' : '');
-    statusDiv.className = `status-message ${type}`;
-}
+// Fetch and render apps
+fetch('apps.json')
+  .then(response => response.json())
+  .then(data => {
+    appsData = data;
+    renderApps(appsData);
+    generateCategories(appsData);
+  });
 
-async function fetchApps() {
-    setStatus('Loading apps...', 'loading');
-
-    try {
-        const response = await fetch(CUSTOM_JSON);
-        const data = await response.json();
-        allApps = data.apps;
-        setStatus('Apps loaded successfully', 'success');
-        setTimeout(() => setStatus('', ''), 3000);
-        displayApps(allApps);
-    } catch (error) {
-        console.error('Custom JSON fetch failed:', error);
-        setStatus('Failed to load apps', 'error', true);
-    }
-}
-
-function displayApps(apps) {
-    const appList = document.getElementById('app-list');
-    appList.innerHTML = '';
-    apps.forEach(app => {
-        const iconPath = app.icon && app.icon.trim() !== '' ? app.icon : 'default-icon.png';
-        const card = document.createElement('div');
-        card.className = 'app-card';
-        card.innerHTML = `
-            <img src="${iconPath}" alt="${app.name}" onerror="this.src='default-icon.png'">
-            <h3>${app.name}</h3>
-            <p>Package: ${app.package}</p>
-        `;
-        card.addEventListener('click', () => showAppDetails(app));
-        appList.appendChild(card);
-    });
-}
-
-function showAppDetails(app) {
-    const details = document.getElementById('app-details');
-    const iconPath = app.icon && app.icon.trim() !== '' ? app.icon : 'default-icon.png';
-    details.innerHTML = `
-        <button class="back-button" onclick="hideAppDetails()">← Back</button>
-        <div class="app-details-header">
-            <img src="${iconPath}" alt="${app.name}" onerror="this.src='default-icon.png'">
-            <h2>${app.name}</h2>
-        </div>
-        <p><strong>Package:</strong> ${app.package}</p>
-        <p><strong>Version:</strong> ${app.version || 'N/A'}</p>
-        <p><strong>Categories:</strong> ${app.categories.join(', ')}</p>
-        <p><strong>Permissions:</strong><br>${app.permissions.join('<br>')}</p>
-        ${app.download_url ? `<button class="install-button" onclick="window.open('${app.download_url}')">Download APK</button>` : '<em>Download not available</em>'}
+// Render apps to the grid
+function renderApps(appList) {
+  appGrid.innerHTML = '';
+  appList.forEach(app => {
+    const card = document.createElement('div');
+    card.className = 'app-card';
+    card.innerHTML = `
+      <img src="${app.icon}" alt="${app.name}">
+      <h3>${app.name}</h3>
+      <p>${app.description}</p>
     `;
-    details.className = 'app-details visible';
-    document.getElementById('app-list').className = 'app-grid hidden';
-    document.getElementById('status-message').className = 'status-message hidden';
+    card.addEventListener('click', () => showAppDetails(app));
+    appGrid.appendChild(card);
+  });
+}
+
+// Generate unique categories
+function generateCategories(apps) {
+  const categorySet = new Set();
+
+  apps.forEach(app => {
+    const catField = Array.isArray(app.category) ? app.category : [app.category];
+    catField.forEach(cat => categorySet.add(cat.trim()));
+  });
+
+  // Add "All" category
+  const allButton = createCategoryChip('All');
+  allButton.classList.add('active');
+  categoriesContainer.appendChild(allButton);
+
+  // Add dynamic categories
+  Array.from(categorySet).sort().forEach(cat => {
+    categoriesContainer.appendChild(createCategoryChip(cat));
+  });
+}
+
+// Create category button
+function createCategoryChip(categoryName) {
+  const chip = document.createElement('div');
+  chip.className = 'category-chip';
+  chip.textContent = categoryName;
+
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+
+    if (categoryName === 'All') {
+      renderApps(appsData);
+    } else {
+      const filtered = appsData.filter(app => {
+        const cats = Array.isArray(app.category) ? app.category : [app.category];
+        return cats.map(c => c.trim()).includes(categoryName);
+      });
+      renderApps(filtered);
+    }
+  });
+
+  return chip;
+}
+
+// Show app details logic (assumes you already have this function)
+function showAppDetails(app) {
+  const detailsScreen = document.querySelector('.app-details');
+  detailsScreen.innerHTML = `
+    <button class="back-button" onclick="hideAppDetails()">← Back</button>
+    <div class="app-details-header">
+      <img src="${app.icon}" alt="${app.name}">
+      <h2>${app.name}</h2>
+      <p>${app.description}</p>
+    </div>
+    <p><strong>Category:</strong> ${Array.isArray(app.category) ? app.category.join(', ') : app.category}</p>
+    <button class="install-button">Install</button>
+  `;
+  detailsScreen.classList.add('visible');
 }
 
 function hideAppDetails() {
-    document.getElementById('app-details').className = 'app-details hidden';
-    document.getElementById('app-list').className = 'app-grid';
-    document.getElementById('status-message').className = 'status-message';
+  document.querySelector('.app-details').classList.remove('visible');
 }
-
-function searchApps(query) {
-    const filteredApps = allApps.filter(app =>
-        app.name.toLowerCase().includes(query.toLowerCase()) ||
-        app.package.toLowerCase().includes(query.toLowerCase())
-    );
-    displayApps(filteredApps);
-}
-
-document.getElementById('search-button').addEventListener('click', () => {
-    const query = document.getElementById('search-bar').value;
-    searchApps(query);
-});
-
-document.getElementById('search-bar').addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-        searchApps(e.target.value);
-    }
-});
-
-fetchApps();
