@@ -29,17 +29,19 @@ function displayApps(apps) {
     appList.innerHTML = '';
     apps.forEach(app => {
         const iconPath = app.icon && app.icon.trim() !== '' ? app.icon : 'default-icon.png';
+        const version = app.version || 'N/A';
         const card = document.createElement('div');
         card.className = 'app-card';
         card.innerHTML = `
             <img src="${iconPath}" alt="${app.name}" onerror="this.src='default-icon.png'">
             <h3>${app.name}</h3>
-            <p>Package: ${app.package}</p>
+            <p>Version: ${version}</p>
         `;
         card.addEventListener('click', () => showAppDetails(app));
         appList.appendChild(card);
     });
 }
+
 
 function showAppDetails(app) {
     const details = document.getElementById('app-details');
