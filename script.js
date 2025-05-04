@@ -27,7 +27,13 @@ async function fetchApps() {
 function displayApps(apps) {
     const appList = document.getElementById('app-list');
     appList.innerHTML = '';
-    apps.forEach(app => {
+
+    // Sort apps alphabetically by name (case-insensitive)
+    const sortedApps = [...apps].sort((a, b) => 
+        a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+    );
+
+    sortedApps.forEach(app => {
         const iconPath = app.icon && app.icon.trim() !== '' ? app.icon : 'default-icon.png';
         const version = app.version || 'N/A';
         const card = document.createElement('div');
@@ -41,6 +47,7 @@ function displayApps(apps) {
         appList.appendChild(card);
     });
 }
+
 
 
 function showAppDetails(app) {
