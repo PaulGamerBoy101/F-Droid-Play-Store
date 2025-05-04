@@ -66,7 +66,12 @@
       "version": "",
       "download_url": "",
       "categories": ["Music", "Media"],
-      "permissions": [],
+      "permissions": [
+        "android.permission.INTERNET",
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.WAKE_LOCK",
+        "android.permission.READ_EXTERNAL_STORAGE"
+      ],
       "icon": ""
     },
     {
@@ -75,7 +80,12 @@
       "version": "",
       "download_url": "",
       "categories": ["Video", "Media"],
-      "permissions": [],
+      "permissions": [
+        "android.permission.INTERNET",
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.WAKE_LOCK",
+        "android.permission.GET_ACCOUNTS"
+      ],
       "icon": ""
     },
     {
@@ -84,7 +94,11 @@
       "version": "",
       "download_url": "",
       "categories": ["Music", "Media"],
-      "permissions": [],
+      "permissions": [
+        "android.permission.INTERNET",
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.WAKE_LOCK"
+      ],
       "icon": ""
     },
     {
@@ -93,7 +107,13 @@
       "version": "",
       "download_url": "",
       "categories": ["Finance", "Payments"],
-      "permissions": [],
+      "permissions": [
+        "android.permission.INTERNET",
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.CAMERA",
+        "android.permission.READ_CONTACTS",
+        "android.permission.RECEIVE_SMS"
+      ],
       "icon": ""
     },
     {
@@ -102,7 +122,10 @@
       "version": "",
       "download_url": "",
       "categories": ["Books", "Reading"],
-      "permissions": [],
+      "permissions": [
+        "android.permission.INTERNET",
+        "android.permission.ACCESS_NETWORK_STATE"
+      ],
       "icon": ""
     },
     {
@@ -111,7 +134,10 @@
       "version": "",
       "download_url": "",
       "categories": ["Books", "Reading"],
-      "permissions": [],
+      "permissions": [
+        "android.permission.INTERNET",
+        "android.permission.READ_EXTERNAL_STORAGE"
+      ],
       "icon": ""
     },
     {
@@ -120,7 +146,10 @@
       "version": "",
       "download_url": "",
       "categories": ["Education", "Reference"],
-      "permissions": [],
+      "permissions": [
+        "android.permission.INTERNET",
+        "android.permission.ACCESS_NETWORK_STATE"
+      ],
       "icon": ""
     },
     {
@@ -129,7 +158,12 @@
       "version": "",
       "download_url": "",
       "categories": ["Security", "VPN"],
-      "permissions": [],
+      "permissions": [
+        "android.permission.INTERNET",
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.BIND_VPN_SERVICE"
+      ],
       "icon": ""
     },
     {
@@ -138,7 +172,11 @@
       "version": "",
       "download_url": "",
       "categories": ["Security", "Passwords"],
-      "permissions": [],
+      "permissions": [
+        "android.permission.INTERNET",
+        "android.permission.USE_BIOMETRIC",
+        "android.permission.USE_FINGERPRINT"
+      ],
       "icon": ""
     },
     {
@@ -147,7 +185,11 @@
       "version": "",
       "download_url": "",
       "categories": ["Email", "Communication"],
-      "permissions": [],
+      "permissions": [
+        "android.permission.INTERNET",
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.READ_CONTACTS"
+      ],
       "icon": ""
     },
     {
@@ -156,7 +198,12 @@
       "version": "",
       "download_url": "",
       "categories": ["Email", "Communication"],
-      "permissions": [],
+      "permissions": [
+        "android.permission.INTERNET",
+        "android.permission.READ_CONTACTS",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.RECEIVE_BOOT_COMPLETED"
+      ],
       "icon": ""
     },
     {
@@ -165,7 +212,11 @@
       "version": "",
       "download_url": "",
       "categories": ["Email", "Security"],
-      "permissions": [],
+      "permissions": [
+        "android.permission.INTERNET",
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.RECEIVE_BOOT_COMPLETED"
+      ],
       "icon": ""
     },
     {
@@ -174,7 +225,11 @@
       "version": "",
       "download_url": "",
       "categories": ["Navigation", "Offline Maps"],
-      "permissions": [],
+      "permissions": [
+        "android.permission.INTERNET",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.WRITE_EXTERNAL_STORAGE"
+      ],
       "icon": ""
     },
     {
@@ -183,7 +238,12 @@
       "version": "",
       "download_url": "",
       "categories": ["Navigation", "Maps"],
-      "permissions": [],
+      "permissions": [
+        "android.permission.INTERNET",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_NETWORK_STATE"
+      ],
       "icon": ""
     }
   ]
