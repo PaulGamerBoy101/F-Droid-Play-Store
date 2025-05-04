@@ -10,6 +10,7 @@
         "android.permission.INTERNET",
         "android.permission.ACCESS_NETWORK_STATE"
       ]
+      "icon": ""
     },
     {
       "name": "Chrome",
@@ -23,6 +24,7 @@
         "android.permission.WRITE_EXTERNAL_STORAGE",
         "android.permission.READ_EXTERNAL_STORAGE"
       ]
+      "icon": ""
     },
     {
       "name": "VLC",
@@ -36,6 +38,7 @@
         "android.permission.WRITE_EXTERNAL_STORAGE",
         "android.permission.WAKE_LOCK"
       ]
+      "icon": ""
     },
     {
       "name": "KDE Connect",
@@ -55,6 +58,7 @@
         "android.permission.WRITE_EXTERNAL_STORAGE",
         "android.permission.FOREGROUND_SERVICE"
       ]
+      "icon": ""
     }
   ]
 }
