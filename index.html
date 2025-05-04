@@ -3,21 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Custom App Store</title>
+    <title>F-Droid Play Store</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
+      <div class="header-left">
+        <img id="logo" src="logo.png" alt="Store Logo">
         <div class="search-container">
-            <input type="text" id="search-bar" placeholder="Search apps...">
-            <button id="search-button">🔍</button>
+          <input id="search-bar" type="text" placeholder="Search apps">
+          <button id="search-button">🔍</button>
         </div>
+      </div>
     </header>
+
     <main>
         <div id="status-message" class="status-message"></div>
         <div id="app-list" class="app-grid"></div>
         <div id="app-details" class="app-details hidden"></div>
     </main>
     <script src="script.js"></script>
+    <div class="categories-footer">
+  <h4>Browse by Category</h4>
+  <div class="category-chip">Games</div>
+  <div class="category-chip">Productivity</div>
+  <div class="category-chip">Social</div>
+  <div class="category-chip">Education</div>
+  <div class="category-chip">Health</div>
+</div>
+
 </body>
 </html>
