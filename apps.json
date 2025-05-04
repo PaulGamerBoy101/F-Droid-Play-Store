@@ -27,8 +27,8 @@
     {
       "name": "VLC",
       "package": "org.videolan.vlc",
-      "version": "",
-      "download_url": "",
+      "version": "3.6.3",
+      "download_url": "https://f-droid.org/repo/org.videolan.vlc_13060308.apk",
       "categories": ["Media", "Video", "Audio"],
       "permissions": [
         "android.permission.INTERNET",
