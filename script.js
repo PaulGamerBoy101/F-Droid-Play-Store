@@ -27,10 +27,11 @@ function displayApps(apps) {
     const appList = document.getElementById('app-list');
     appList.innerHTML = '';
     apps.forEach(app => {
+        const iconPath = app.icon && app.icon.trim() !== '' ? app.icon : 'default-icon.png';
         const card = document.createElement('div');
         card.className = 'app-card';
         card.innerHTML = `
-            <img src="icons/${app.package}.png" alt="${app.name}" onerror="this.src='default-icon.png'">
+            <img src="${iconPath}" alt="${app.name}" onerror="this.src='default-icon.png'">
             <h3>${app.name}</h3>
             <p>Package: ${app.package}</p>
         `;
@@ -41,10 +42,11 @@ function displayApps(apps) {
 
 function showAppDetails(app) {
     const details = document.getElementById('app-details');
+    const iconPath = app.icon && app.icon.trim() !== '' ? app.icon : 'default-icon.png';
     details.innerHTML = `
         <button class="back-button" onclick="hideAppDetails()">← Back</button>
         <div class="app-details-header">
-            <img src="icons/${app.package}.png" alt="${app.name}" onerror="this.src='default-icon.png'">
+            <img src="${iconPath}" alt="${app.name}" onerror="this.src='default-icon.png'">
             <h2>${app.name}</h2>
         </div>
         <p><strong>Package:</strong> ${app.package}</p>
