@@ -40,8 +40,8 @@
     {
       "name": "KDE Connect",
       "package": "org.kde.kdeconnect_tp",
-      "version": "",
-      "download_url": "",
+      "version": "1.33.3",
+      "download_url": "https://f-droid.org/repo/org.kde.kdeconnect_tp_13303.apk",
       "categories": ["Tools", "Connectivity"],
       "permissions": [
         "android.permission.ACCESS_FINE_LOCATION",
