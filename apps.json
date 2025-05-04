@@ -150,7 +150,7 @@
         "android.permission.INTERNET",
         "android.permission.ACCESS_NETWORK_STATE"
       ],
-      "icon": ""
+      "icon": "apps/icons/Wikipedia's_W.svg.png"
     },
     {
       "name": "Proton VPN",
@@ -164,7 +164,7 @@
         "android.permission.FOREGROUND_SERVICE",
         "android.permission.BIND_VPN_SERVICE"
       ],
-      "icon": ""
+      "icon": "apps/icons/proton-vpn.png"
     },
     {
       "name": "Bitwarden",
@@ -177,7 +177,7 @@
         "android.permission.USE_BIOMETRIC",
         "android.permission.USE_FINGERPRINT"
       ],
-      "icon": ""
+      "icon": "apps/icons/bitwarden-icon.png"
     },
     {
       "name": "Thunderbird For Android",
@@ -190,7 +190,7 @@
         "android.permission.ACCESS_NETWORK_STATE",
         "android.permission.READ_CONTACTS"
       ],
-      "icon": ""
+      "icon": "apps/icons/thunderbird_93895.png"
     },
     {
       "name": "FairEmail",
@@ -204,7 +204,7 @@
         "android.permission.READ_EXTERNAL_STORAGE",
         "android.permission.RECEIVE_BOOT_COMPLETED"
       ],
-      "icon": ""
+      "icon": "apps/icons/fair-email-icon.png"
     },
     {
       "name": "Proton Mail",
@@ -217,7 +217,7 @@
         "android.permission.ACCESS_NETWORK_STATE",
         "android.permission.RECEIVE_BOOT_COMPLETED"
       ],
-      "icon": ""
+      "icon": "apps/icons/protonmail-2.png"
     },
     {
       "name": "Pocket Maps",
@@ -230,7 +230,7 @@
         "android.permission.ACCESS_FINE_LOCATION",
         "android.permission.WRITE_EXTERNAL_STORAGE"
       ],
-      "icon": ""
+      "icon": "apps/icons/200px-Pocketmaps_icon.png"
     },
     {
       "name": "Google Maps",
@@ -244,7 +244,7 @@
         "android.permission.ACCESS_COARSE_LOCATION",
         "android.permission.ACCESS_NETWORK_STATE"
       ],
-      "icon": ""
+      "icon": "apps/icons/google-maps-icon.png"
     }
   ]
 }
