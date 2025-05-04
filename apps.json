@@ -3,8 +3,8 @@
     {
       "name": "Firefox",
       "package": "org.mozilla.firefox",
-      "version": "",
-      "download_url": "",
+      "version": "fenix-139.0b3",
+      "download_url": "https://ftp.mozilla.org/pub/fenix/releases/139.0b3/android/fenix-139.0b3-android-arm64-v8a/fenix-139.0b3.multi.android-arm64-v8a.apk",
       "categories": ["Browser", "Internet"],
       "permissions": [
         "android.permission.INTERNET",
