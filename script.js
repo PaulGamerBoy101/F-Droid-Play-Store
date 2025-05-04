@@ -1,14 +1,39 @@
 const FDROID_API = 'https://f-droid.org/repo/index-v1.json';
+const PROXY_API = 'https://cors-anywhere.herokuapp.com/https://f-droid.org/repo/index-v1.json';
 let allApps = [];
 
+function setStatus(message, type) {
+    const statusDiv = document.getElementById('status-message');
+    statusDiv.textContent = message;
+    statusDiv.className = `status-message ${type}`;
+}
+
 async function fetchApps() {
+    setStatus('Loading apps...', 'loading');
+    
     try {
+        // Try direct fetch first
         const response = await fetch(FDROID_API);
         const data = await response.json();
         allApps = Object.values(data.packages);
+        setStatus('Apps loaded successfully', 'success');
+        setTimeout(() => setStatus('', ''), 3000); // Clear success message after 3s
         displayApps(allApps);
     } catch (error) {
-        console.error('Error fetching apps:', error);
+        console.error('Direct fetch failed:', error);
+        // Try proxy as fallback
+        setStatus('Retrying with proxy...', 'loading');
+        try {
+            const proxyResponse = await fetch(PROXY_API);
+            const proxyData = await proxyResponse.json();
+            allApps = Object.values(proxyData.packages);
+            setStatus('Apps loaded successfully', 'success');
+            setTimeout(() => setStatus('', ''), 3000); // Clear success message after 3s
+            displayApps(allApps);
+        } catch (proxyError) {
+            console.error('Proxy fetch failed:', proxyError);
+            setStatus('Failed to load apps', 'error');
+        }
     }
 }
 
@@ -43,11 +68,13 @@ function showAppDetails(app) {
     `;
     details.className = 'app-details visible';
     document.getElementById('app-list').className = 'app-grid hidden';
+    document.getElementById('status-message').className = 'status-message hidden';
 }
 
 function hideAppDetails() {
     document.getElementById('app-details').className = 'app-details hidden';
     document.getElementById('app-list').className = 'app-grid';
+    document.getElementById('status-message').className = 'status-message';
 }
 
 function searchApps(query) {
