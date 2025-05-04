@@ -38,7 +38,7 @@
         "android.permission.WRITE_EXTERNAL_STORAGE",
         "android.permission.WAKE_LOCK"
       ]
-      "icon": ""
+      "icon": "apps/icons/vlc.png"
     },
     {
       "name": "KDE Connect",
@@ -58,7 +58,7 @@
         "android.permission.WRITE_EXTERNAL_STORAGE",
         "android.permission.FOREGROUND_SERVICE"
       ]
-      "icon": ""
+      "icon": "apps/icons/kdeconnect.webp"
     }
   ]
 }
