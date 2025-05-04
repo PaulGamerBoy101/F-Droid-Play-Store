@@ -15,8 +15,8 @@
     {
       "name": "Chrome",
       "package": "com.android.chrome",
-      "version": "",
-      "download_url": "",
+      "version": "135.0.7049.100",
+      "download_url": "https://dw.uptodown.net/dwn/RvVkii134Riphftvun7hQBZyU0aCwJjJMFI3FD3XyiRjJIscJd9Nfj99FWZG336RsUm80dveqx6lf-0VAsb2kQlIqp79pg2Kzr6bAwhO7W08ZjjPyfa6w1ms1Uq2ZqiD/zU7zHM1WtZyTWr3NcSG7HF63sGp0h_FCcHjIugauCMKCuMFlxxFzeHu0xVulGyUyTB-BQ43TgIcVPS77iceXsfNZiI_PIcL98XNMh0JszwEQ_K_TCz3a7JzN9FEBtE08/d1U9PKJDJrwaP6EkddVERV3isX94ba6YMWZbnDEklC3GfTd5gN04izDWy9REl0r7FBRkv6lCgDup3iJ_zGBHRA==/google-chrome-135-0-7049-100.apk",
       "categories": ["Browser", "Internet"],
       "permissions": [
         "android.permission.INTERNET",
