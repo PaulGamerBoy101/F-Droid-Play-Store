@@ -72,7 +72,7 @@
         "android.permission.WAKE_LOCK",
         "android.permission.READ_EXTERNAL_STORAGE"
       ],
-      "icon": ""
+      "icon": "apps/icons/spotifyicon.png"
     },
     {
       "name": "Youtube",
@@ -86,7 +86,7 @@
         "android.permission.WAKE_LOCK",
         "android.permission.GET_ACCOUNTS"
       ],
-      "icon": ""
+      "icon": "apps/icons/yotubeicon.webp"
     },
     {
       "name": "Youtube Music",
@@ -99,7 +99,7 @@
         "android.permission.ACCESS_NETWORK_STATE",
         "android.permission.WAKE_LOCK"
       ],
-      "icon": ""
+      "icon": "apps/icons/youtube-music-icon.png"
     },
     {
       "name": "Venmo",
@@ -114,7 +114,7 @@
         "android.permission.READ_CONTACTS",
         "android.permission.RECEIVE_SMS"
       ],
-      "icon": ""
+      "icon": "apps/icons/venmo-icon.jpeg"
     },
     {
       "name": "Libby",
@@ -126,7 +126,7 @@
         "android.permission.INTERNET",
         "android.permission.ACCESS_NETWORK_STATE"
       ],
-      "icon": ""
+      "icon": "apps/icons/libby-icon.webp"
     },
     {
       "name": "Book's Story",
@@ -138,7 +138,7 @@
         "android.permission.INTERNET",
         "android.permission.READ_EXTERNAL_STORAGE"
       ],
-      "icon": ""
+      "icon": "apps/icons/books-story-icon.png"
     },
     {
       "name": "Wikipedia",
