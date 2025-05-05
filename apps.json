@@ -63,8 +63,8 @@
     {
       "name": "Spotify",
       "package": "com.spotify.music",
-      "version": "",
-      "download_url": "",
+      "version": "9.0.28.630",
+      "download_url": "https://apkpure.com/spotify-music-and-podcasts-for-android/com.spotify.music/downloading/9.0.28.630",
       "categories": ["Music", "Media"],
       "permissions": [
         "android.permission.INTERNET",
@@ -77,8 +77,8 @@
     {
       "name": "Youtube",
       "package": "com.google.android.youtube",
-      "version": "",
-      "download_url": "",
+      "version": "20.17.41",
+      "download_url": "https://www.apkmirror.com/apk/google-inc/youtube/youtube-20-17-41-release/youtube-20-17-41-2-android-apk-download/download/?key=fade7b49fdf4a2e83b5f44b3fa61716cf946c832&forcebaseapk=true",
       "categories": ["Video", "Media"],
       "permissions": [
         "android.permission.INTERNET",
@@ -91,8 +91,8 @@
     {
       "name": "Youtube Music",
       "package": "com.google.android.apps.youtube.music",
-      "version": "",
-      "download_url": "",
+      "version": "8.17.52",
+      "download_url": "https://www.apkmirror.com/apk/google-inc/youtube-music/youtube-music-8-17-52-release/youtube-music-8-17-52-3-android-apk-download/download/?key=6e8596b464944c23933a2d6f22c9912bf1517602&forcebaseapk=true",
       "categories": ["Music", "Media"],
       "permissions": [
         "android.permission.INTERNET",
@@ -104,8 +104,8 @@
     {
       "name": "Venmo",
       "package": "com.venmo",
-      "version": "",
-      "download_url": "",
+      "version": "10.63.1",
+      "download_url": "https://www.apkmirror.com/apk/venmo/venmo-venmo/venmo-10-63-1-release/venmo-10-63-1-android-apk-download/download/?key=609230a9e98639d90e3152bc9f6a2f4aad3ff820",
       "categories": ["Finance", "Payments", "Banking"],
       "permissions": [
         "android.permission.INTERNET",
@@ -119,8 +119,8 @@
     {
       "name": "Libby",
       "package": "com.overdrive.mobile.android.libby",
-      "version": "",
-      "download_url": "",
+      "version": "8.3.0",
+      "download_url": "https://www.apkmirror.com/apk/overdrive-inc/libby-by-overdrive-labs/libby-the-library-app-8-3-0-release/libby-the-library-app-8-3-0-android-apk-download/download/?key=550c2037455d27bed0ec0379978dd8cea318db67",
       "categories": ["Books", "Reading", "Education", "E-Books"],
       "permissions": [
         "android.permission.INTERNET",
@@ -131,8 +131,8 @@
     {
       "name": "Book's Story",
       "package": "com.booksstory.reader",
-      "version": "",
-      "download_url": "",
+      "version": "1.7.1",
+      "download_url": "https://f-droid.org/repo/ua.acclorite.book_story_13.apk",
       "categories": ["Books", "Reading", "Education", "E-Books"],
       "permissions": [
         "android.permission.INTERNET",
@@ -143,8 +143,8 @@
     {
       "name": "Wikipedia",
       "package": "org.wikipedia",
-      "version": "",
-      "download_url": "",
+      "version": "r/2.7.50529-r-2025-04-21",
+      "download_url": "https://f-droid.org/repo/org.wikipedia_50529.apk",
       "categories": ["Education", "Reference", "Wiki"],
       "permissions": [
         "android.permission.INTERNET",
@@ -155,8 +155,8 @@
     {
       "name": "Proton VPN",
       "package": "ch.protonvpn.android",
-      "version": "",
-      "download_url": "",
+      "version": "5.10.63.1",
+      "download_url": "https://f-droid.org/repo/ch.protonvpn.android_605106301.apk",
       "categories": ["Security", "VPN", "Internet"],
       "permissions": [
         "android.permission.INTERNET",
