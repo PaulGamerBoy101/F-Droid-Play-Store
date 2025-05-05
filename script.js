@@ -1,5 +1,5 @@
 const CUSTOM_JSON = 'apps.json'; // Your local JSON file
-const FDROID_PROXY = 'http://localhost:5000/api/fdroid-apps'; // Update to your proxy URL
+const FDROID_PROXY = 'http://192.168.0.69:5000'; // Update to your proxy URL
 let allApps = [];
 
 function setStatus(message, type, retry = false) {
