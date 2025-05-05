@@ -169,8 +169,8 @@
     {
       "name": "Bitwarden",
       "package": "com.x8bit.bitwarden",
-      "version": "",
-      "download_url": "",
+      "version": "2025.3.0",
+      "download_url": "https://www.apkmirror.com/apk/bitwarden-inc/bitwarden-password-manager/bitwarden-password-manager-2025-3-0-release/bitwarden-password-manager-2025-3-0-android-apk-download/download/?key=ef8f9b5ccafa36c157f9bb7c5a1e3dd0bcc42b54",
       "categories": ["Security", "Passwords"],
       "permissions": [
         "android.permission.INTERNET",
@@ -182,8 +182,8 @@
     {
       "name": "Thunderbird For Android",
       "package": "org.mozilla.thunderbird",
-      "version": "",
-      "download_url": "",
+      "version": "9.0",
+      "download_url": "https://f-droid.org/repo/net.thunderbird.android_9.apk",
       "categories": ["Email", "Communication"],
       "permissions": [
         "android.permission.INTERNET",
