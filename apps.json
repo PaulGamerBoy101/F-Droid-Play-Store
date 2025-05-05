@@ -195,8 +195,8 @@
     {
       "name": "FairEmail",
       "package": "eu.faircode.email",
-      "version": "",
-      "download_url": "",
+      "version": "1.2274",
+      "download_url": "https://f-droid.org/repo/eu.faircode.email_2274.apk",
       "categories": ["Email", "Communication"],
       "permissions": [
         "android.permission.INTERNET",
@@ -209,8 +209,8 @@
     {
       "name": "Proton Mail",
       "package": "ch.protonmail.android",
-      "version": "",
-      "download_url": "",
+      "version": "v4.9.1 (11362)",
+      "download_url": "https://github.com/ProtonMail/android-mail/releases/download/4.9.1(11362)/ProtonMail-4.9.1_11362.apk",
       "categories": ["Email", "Security", "Communication"],
       "permissions": [
         "android.permission.INTERNET",
@@ -222,9 +222,9 @@
     {
       "name": "Pocket Maps",
       "package": "net.sharewire.pocketmaps",
-      "version": "",
-      "download_url": "",
-      "categories": ["Navigation", "Offline Maps", "Maps"],
+      "version": "4.0",
+      "download_url": "https://f-droid.org/repo/com.junjunguo.pocketmaps_40.apk",
+      "categories": ["Navigation", "Offline Maps", "Maps", "GPS"],
       "permissions": [
         "android.permission.INTERNET",
         "android.permission.ACCESS_FINE_LOCATION",
@@ -235,14 +235,16 @@
     {
       "name": "Google Maps",
       "package": "com.google.android.apps.maps",
-      "version": "",
-      "download_url": "",
-      "categories": ["Navigation", "Maps"],
+      "version": "25.18.00.752029409",
+      "download_url": "https://www.apkmirror.com/apk/google-inc/maps/google-maps-25-18-00-752029409-release/google-maps-25-18-00-752029409-android-apk-download/download/?key=e650a9b56e29003fa1073c0282e0277034f26db9&forcebaseapk=true",
+      "categories": ["Navigation", "Maps", "GPS"],
       "permissions": [
         "android.permission.INTERNET",
         "android.permission.ACCESS_FINE_LOCATION",
         "android.permission.ACCESS_COARSE_LOCATION",
-        "android.permission.ACCESS_NETWORK_STATE"
+        "android.permission.ACCESS_NETWORK_STATE",
+        "GPS",
+        "LOCATION"
       ],
       "icon": "apps/icons/google-maps-icon.png"
     }
