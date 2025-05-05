@@ -15,8 +15,8 @@
     {
       "name": "Chrome",
       "package": "com.android.chrome",
-      "version": "135.0.7049.100",
-      "download_url": "https://dw.uptodown.net/dwn/RvVkii134Riphftvun7hQBZyU0aCwJjJMFI3FD3XyiRjJIscJd9Nfj99FWZG336RsUm80dveqx6lf-0VAsb2kQlIqp79pg2Kzr6bAwhO7W08ZjjPyfa6w1ms1Uq2ZqiD/zU7zHM1WtZyTWr3NcSG7HF63sGp0h_FCcHjIugauCMKCuMFlxxFzeHu0xVulGyUyTB-BQ43TgIcVPS77iceXsfNZiI_PIcL98XNMh0JszwEQ_K_TCz3a7JzN9FEBtE08/d1U9PKJDJrwaP6EkddVERV3isX94ba6YMWZbnDEklC3GfTd5gN04izDWy9REl0r7FBRkv6lCgDup3iJ_zGBHRA==/google-chrome-135-0-7049-100.apk",
+      "version": "136.0.7103.60",
+      "download_url": "",
       "categories": ["Browser", "Internet", "Web"],
       "permissions": [
         "android.permission.INTERNET",
@@ -64,7 +64,7 @@
       "name": "Spotify",
       "package": "com.spotify.music",
       "version": "9.0.28.630",
-      "download_url": "https://apkpure.com/spotify-music-and-podcasts-for-android/com.spotify.music/downloading/9.0.28.630",
+      "download_url": "",
       "categories": ["Music", "Media"],
       "permissions": [
         "android.permission.INTERNET",
@@ -78,7 +78,7 @@
       "name": "Youtube",
       "package": "com.google.android.youtube",
       "version": "20.17.41",
-      "download_url": "https://www.apkmirror.com/apk/google-inc/youtube/youtube-20-17-41-release/youtube-20-17-41-2-android-apk-download/download/?key=fade7b49fdf4a2e83b5f44b3fa61716cf946c832&forcebaseapk=true",
+      "download_url": "",
       "categories": ["Video", "Media"],
       "permissions": [
         "android.permission.INTERNET",
