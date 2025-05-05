@@ -1,4 +1,5 @@
-const CUSTOM_JSON = 'apps.json'; // Or change to your actual file path
+const CUSTOM_JSON = 'apps.json'; // Your local JSON file
+const FDROID_PROXY = 'http://localhost:5000/api/fdroid-apps'; // Update to your proxy URL
 let allApps = [];
 
 function setStatus(message, type, retry = false) {
@@ -9,18 +10,39 @@ function setStatus(message, type, retry = false) {
 
 async function fetchApps() {
     setStatus('Loading apps...', 'loading');
+    allApps = [];
 
     try {
-        const response = await fetch(CUSTOM_JSON);
-        const data = await response.json();
-        allApps = data.apps;
-        setStatus('Apps loaded successfully', 'success');
+        // Fetch local apps.json
+        const localResponse = await fetch(CUSTOM_JSON);
+        const localData = await localResponse.json();
+        allApps = allApps.concat(localData.apps || []);
+        setStatus('Local apps loaded', 'success');
+    } catch (error) {
+        console.error('Local JSON fetch failed:', error);
+        setStatus('Failed to load local apps', 'error', true);
+    }
+
+    try {
+        // Fetch F-Droid apps from proxy
+        const fdroidResponse = await fetch(FDROID_PROXY);
+        const fdroidData = await fdroidResponse.json();
+        if (fdroidData.error) {
+            throw new Error(fdroidData.error);
+        }
+        allApps = allApps.concat(fdroidData.apps || []);
+        setStatus('F-Droid apps loaded successfully', 'success');
+    } catch (error) {
+        console.error('F-Droid JSON fetch failed:', error);
+        setStatus('Failed to load F-Droid apps', 'error', true);
+    }
+
+    if (allApps.length > 0) {
         setTimeout(() => setStatus('', ''), 3000);
         displayApps(allApps);
-        generateCategories(allApps); // 👈 Add this line to build categories
-    } catch (error) {
-        console.error('Custom JSON fetch failed:', error);
-        setStatus('Failed to load apps', 'error', true);
+        generateCategories(allApps);
+    } else {
+        setStatus('No apps loaded', 'error', true);
     }
 }
 
@@ -48,8 +70,6 @@ function displayApps(apps) {
     });
 }
 
-
-
 function showAppDetails(app) {
     const details = document.getElementById('app-details');
     const iconPath = app.icon && app.icon.trim() !== '' ? app.icon : 'default-icon.png';
@@ -61,8 +81,8 @@ function showAppDetails(app) {
         </div>
         <p><strong>Package:</strong> ${app.package}</p>
         <p><strong>Version:</strong> ${app.version || 'N/A'}</p>
-        <p><strong>Categories:</strong> ${Array.isArray(app.categories) ? app.categories.join(', ') : app.categories}</p>
-        <p><strong>Permissions:</strong><br>${app.permissions.join('<br>')}</p>
+        <p><strong>Categories:</strong> ${Array.isArray(app.categories) ? app.categories.join(', ') : app.categories || 'N/A'}</p>
+        <p><strong>Permissions:</strong><br>${Array.isArray(app.permissions) ? app.permissions.join('<br>') : 'None'}</p>
         ${app.download_url ? `<button class="install-button" onclick="window.open('${app.download_url}')">Download APK</button>` : '<em>Download not available</em>'}
     `;
     details.className = 'app-details visible';
@@ -90,14 +110,14 @@ function generateCategories(apps) {
 
     const uniqueCategories = new Set();
     apps.forEach(app => {
-        const cats = Array.isArray(app.categories) ? app.categories : [app.categories];
+        const cats = Array.isArray(app.categories) ? app.categories : [app.categories].filter(c => c);
         cats.forEach(cat => uniqueCategories.add(cat.trim()));
     });
 
     const categories = ['All', ...Array.from(uniqueCategories).sort()];
 
     categories.forEach(category => {
-        const btn = document.createElement('button');
+        const btn = document.createElement('div'); // Changed to div for better styling control
         btn.className = 'category-chip';
         btn.textContent = category;
 
@@ -109,7 +129,7 @@ function generateCategories(apps) {
                 displayApps(allApps);
             } else {
                 const filtered = allApps.filter(app => {
-                    const cats = Array.isArray(app.categories) ? app.categories : [app.categories];
+                    const cats = Array.isArray(app.categories) ? app.categories : [app.categories].filter(c => c);
                     return cats.map(c => c.trim()).includes(category);
                 });
                 displayApps(filtered);
