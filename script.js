@@ -1,33 +1,103 @@
 const FDROID_APPS = [
-    // Original Apps
-    'org.fdroid.fdroid',           // F-Droid client (App Store)
-    'org.mozilla.fennec_fdroid',   // Fennec Browser (Browser)
-    'org.videolan.vlc',            // VLC (Video/Music Player)
-    'org.telegram.messenger',      // Telegram (Messaging)
-    'com.termux',                  // Termux (Terminal Emulator)
-    // Music Players
-    'com.owncloud.music',          // Nextcloud Music
-    'org.vanilla.music',           // Vanilla Music
-    'org.musicplayer.audioplayer.metro', // Metro
-    // Weather Apps
-    'com.martinmimigames.simpleweather', // Simple Weather
-    'org.breezyweather',           // Breezy Weather
-    // Icon Packs
-    'com.arcticons.day',           // Arcticons Day
-    'com.arcticons.night',         // Arcticons Night
-    // Browsers
-    'org.mullvad.mull',            // Mull
-    'org.fossbrowser',             // FOSS Browser
-    // Video Players / YouTube
-    'org.schabi.newpipe',          // NewPipe (YouTube/Video Player)
-    'com.justplayer',              // Just Video Player
-    // YouTube Music / Reddit Clients
-    'com.vincentengelsoftware.vimusics', // ViMusic (YouTube Music)
-    'com.infinity.reddit',         // Infinity for Reddit
-    'org.ya.reddit'                // Dawn for Reddit
+    'org.fdroid.fdroid',
+    'org.mozilla.fennec_fdroid',
+    'org.videolan.vlc',
+    'org.telegram.messenger',
+    'com.termux',
+    'com.owncloud.music',
+    'org.vanilla.music',
+    'org.musicplayer.audioplayer.metro',
+    'com.martinmimigames.simpleweather',
+    'org.breezyweather',
+    'com.arcticons.day',
+    'com.arcticons.night',
+    'org.mullvad.mull',
+    'org.fossbrowser',
+    'org.schabi.newpipe',
+    'com.justplayer',
+    'com.vincentengelsoftware.vimusics',
+    'com.infinity.reddit',
+    'org.ya.reddit',
+    'org.kde.kdeconnect_tp',
+    'com.looker.droidify',
+    'ch.protonmail.android',
+    'ch.protonvpn.android',
+    'ch.protonpass',
+    'org.oxycast',
+    'com.kyant.music',
+    'org.pulseaudio.pulseaudio',
+    'org.gateshipone.malp',
+    'com.github.ashutoshgngwp.tidal_music',
+    'org.deepsymmetry.beatlink',
+    'org.fossify.weather',
+    'de.kaffeemitkoffein.tinyweatherforecastgermany',
+    'org.metotrans.apps.weather',
+    'com.joshuacerdenia.android.niceweather',
+    'com.donnnno.arcticons',
+    'com.thomaslowe.iconer',
+    'com.blueheart.icons',
+    'com.rahulvij.icons',
+    'org.torproject.torbrowser',
+    'com.duckduckgo.privacy.browser',
+    'org.privacybrowser',
+    'at.mono.privacybrowser',
+    'org.freebrowser',
+    'org.mpv',
+    'com.github.videolan.vlc_remote',
+    'org.jellyfin.androidtv',
+    'com.unnamed.videoplayer',
+    'org.libretube',
+    'com.github.spotiflyer',
+    'org.strawberry',
+    'com.lemmy',
+    'org.mastodon.android',
+    'org.twidere',
+    'org.joplin',
+    'org.fossify.notes',
+    'org.tasks',
+    'org.fossify.calendar',
+    'at.bitfire.davdroid',
+    'org.koreader',
+    'org.documentfoundation.libreoffice',
+    'org.qownnotes',
+    'org.ankidroid',
+    'org.orgzly',
+    'org.adaway',
+    'com.beemdevelopment.aegis',
+    'org.bitwarden',
+    'org.personal.dnsfilter',
+    'org.mollyim.android',
+    'org.twinhelix.signal',
+    'org.tutanota',
+    'org.vigilante',
+    'org.trackercontrol',
+    'org.island',
+    'com.mixplorer',
+    'org.fossify.filemanager',
+    'com.wa2c.android.cifsdocumentsprovider',
+    'org.rcx',
+    'org.materialfiles',
+    'com.fsck.k9',
+    'org.fairemail',
+    'org.simpleemail',
+    'org.kde.ktrip',
+    'org.kde.maui.station',
+    'org.kde.maui.calculator',
+    'org.kde.maui.note',
+    'org.osmand',
+    'org.openstreetcomplete',
+    'org.organicmaps',
+    'org.connectbot',
+    'org.gadgetbridge',
+    'org.antennapod',
+    'org.florisboard',
+    'org.simplegallery',
+    'org.pdfconverter'
 ];
 const FDROID_METADATA_URL = 'https://raw.githubusercontent.com/f-droid/fdroiddata/master/metadata/';
 let allApps = [];
+let currentPage = 1;
+const ITEMS_PER_PAGE = 10;
 
 // Load js-yaml dynamically
 function loadJsYaml() {
@@ -55,24 +125,19 @@ async function fetchApps() {
     allApps = [];
 
     try {
-        // Load js-yaml
         await loadJsYaml();
-
-        // Fetch metadata for each F-Droid app
         const appPromises = FDROID_APPS.map(async (appId) => {
             try {
                 const response = await fetch(`${FDROID_METADATA_URL}${appId}.yml`);
                 if (!response.ok) throw new Error(`Failed to fetch ${appId}.yml`);
                 const yamlText = await response.text();
                 const data = jsyaml.load(yamlText);
-
-                // Transform YAML to app format, omitting icon
                 const latestBuild = data.Builds && data.Builds.length > 0 ? data.Builds[data.Builds.length - 1] : {};
                 return {
                     name: data.AutoName || data.Name || appId,
                     package: appId,
                     version: latestBuild.versionName || 'N/A',
-                    icon: 'default-icon.png', // Always use default icon
+                    icon: 'default-icon.png',
                     categories: data.Categories || [],
                     permissions: latestBuild['uses-permission'] || [],
                     download_url: latestBuild.commit ? `https://f-droid.org/repo/${appId}_${latestBuild.versionCode}.apk` : ''
@@ -102,13 +167,21 @@ function displayApps(apps) {
     const appList = document.getElementById('app-list');
     appList.innerHTML = '';
 
-    // Sort apps alphabetically by name (case-insensitive)
+    // Sort apps alphabetically
     const sortedApps = [...apps].sort((a, b) => 
         a.name.toLowerCase().localeCompare(b.name.toLowerCase())
     );
 
-    sortedApps.forEach(app => {
-        const iconPath = app.icon; // Always 'default-icon.png'
+    // Calculate pagination
+    const totalPages = Math.ceil(sortedApps.length / ITEMS_PER_PAGE);
+    currentPage = Math.min(currentPage, totalPages);
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    const paginatedApps = sortedApps.slice(startIndex, endIndex);
+
+    // Display paginated apps
+    paginatedApps.forEach(app => {
+        const iconPath = app.icon;
         const version = app.version || 'N/A';
         const card = document.createElement('div');
         card.className = 'app-card';
@@ -120,11 +193,26 @@ function displayApps(apps) {
         card.addEventListener('click', () => showAppDetails(app));
         appList.appendChild(card);
     });
+
+    // Add pagination controls
+    const paginationDiv = document.createElement('div');
+    paginationDiv.className = 'pagination';
+    paginationDiv.innerHTML = `
+        <button class="pagination-button" ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">Previous</button>
+        <span>Page ${currentPage} of ${totalPages}</span>
+        <button class="pagination-button" ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">Next</button>
+    `;
+    appList.appendChild(paginationDiv);
+}
+
+function changePage(page) {
+    currentPage = page;
+    displayApps(allApps);
 }
 
 function showAppDetails(app) {
     const details = document.getElementById('app-details');
-    const iconPath = app.icon; // Always 'default-icon.png'
+    const iconPath = app.icon;
     details.innerHTML = `
         <button class="back-button" onclick="hideAppDetails()">← Back</button>
         <div class="app-details-header">
@@ -149,6 +237,7 @@ function hideAppDetails() {
 }
 
 function searchApps(query) {
+    currentPage = 1; // Reset to first page on search
     const filteredApps = allApps.filter(app =>
         app.name.toLowerCase().includes(query.toLowerCase()) ||
         app.package.toLowerCase().includes(query.toLowerCase())
@@ -176,6 +265,7 @@ function generateCategories(apps) {
         btn.addEventListener('click', () => {
             document.querySelectorAll('.category-chip').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
+            currentPage = 1; // Reset to first page on category change
 
             if (category === 'All') {
                 displayApps(allApps);
