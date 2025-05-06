@@ -1,7 +1,6 @@
 const FDROID_JSON = 'index-v2.json';
 let allApps = [];
 
-// Helper: Extract first available localized string
 function getLocalizedValue(localizedObj) {
     if (typeof localizedObj === 'string') return localizedObj;
     if (typeof localizedObj === 'object' && localizedObj !== null) {
@@ -25,40 +24,43 @@ async function fetchApps() {
         const response = await fetch(FDROID_JSON);
         const fdroidData = await response.json();
 
-        if (fdroidData && fdroidData.packages) {
-            let count = 0;
+        let count = 0;
 
-            Object.entries(fdroidData.packages).forEach(([pkg, app]) => {
-                if (count >= 100) return;
+        Object.entries(fdroidData).forEach(([pkg, app]) => {
+            if (count >= 100) return;
 
-                const versionsData = app.versions || {};
-                const versionKeys = Object.keys(versionsData);
-                const latestKey = versionKeys[versionKeys.length - 1];
-                const latestVersion = app.versions?.[latestKey];
-                const manifest = latestVersion?.manifest || {};
-                const permissions = manifest.usesPermission?.map(p => p.name) || [];
+            const metadata = app.metadata || {};
+            const versions = app.versions || {};
+            const versionList = Object.values(versions);
 
-                const appData = {
-                    name: getLocalizedValue(app.name),
-                    summary: getLocalizedValue(app.summary),
-                    description: getLocalizedValue(app.description),
-                    whatsNew: getLocalizedValue(latestVersion?.whatsNew),
-                    package: pkg,
-                    version: manifest.versionName || 'N/A',
-                    categories: app.categories || [],
-                    icon: null, // icon removed
-                    download_url: latestVersion?.file?.name ? `https://f-droid.org/repo${latestVersion.file.name}` : '',
-                    permissions: permissions
-                };
+            if (versionList.length === 0) return;
 
-                allApps.push(appData);
-                count++;
-            });
+            // Get the latest version by max 'added' timestamp
+            const latestVersion = versionList.reduce((latest, current) =>
+                (current.added || 0) > (latest.added || 0) ? current : latest
+            );
 
-            setStatus('F-Droid apps loaded successfully', 'success');
-        } else {
-            throw new Error('Invalid F-Droid JSON format');
-        }
+            const manifest = latestVersion.manifest || {};
+            const permissions = manifest.usesPermission?.map(p => p.name) || [];
+
+            const appData = {
+                name: getLocalizedValue(metadata.name),
+                summary: getLocalizedValue(metadata.summary),
+                description: getLocalizedValue(metadata.description),
+                whatsNew: getLocalizedValue(latestVersion.whatsNew),
+                package: pkg,
+                version: manifest.versionName || 'N/A',
+                categories: metadata.categories || [],
+                icon: null, // intentionally skipped
+                download_url: latestVersion.file?.name ? `https://f-droid.org/repo${latestVersion.file.name}` : '',
+                permissions: permissions
+            };
+
+            allApps.push(appData);
+            count++;
+        });
+
+        setStatus('F-Droid apps loaded successfully', 'success');
 
     } catch (error) {
         console.error('F-Droid API fetch failed:', error);
@@ -182,7 +184,7 @@ document.getElementById('search-bar').addEventListener('keypress', (e) => {
     }
 });
 
-// Initialize only once when DOM is ready
+// Initialize
 window.addEventListener('DOMContentLoaded', () => {
     fetchApps();
 });
