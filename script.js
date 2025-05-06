@@ -1,7 +1,7 @@
-const FDROID_JSON = 'index-v2.json';  // The downloaded F-Droid JSON file
+const FDROID_JSON = 'index-v2.json';
 let allApps = [];
 
-// Helper: Extract first available localized value
+// Helper: Extract first available localized string
 function getLocalizedValue(localizedObj) {
     if (typeof localizedObj === 'string') return localizedObj;
     if (typeof localizedObj === 'object' && localizedObj !== null) {
@@ -9,6 +9,12 @@ function getLocalizedValue(localizedObj) {
         return localizedObj[firstLang] || 'Unknown';
     }
     return 'Unknown';
+}
+
+// Helper: Extract icon path from nested structure
+function getIconPath(app, pkg) {
+    const path = app.icon?.['en-US']?.name || app.icon?.name;
+    return path ? `https://f-droid.org/repo${path}` : 'default-icon.png';
 }
 
 function setStatus(message, type, retry = false) {
@@ -31,19 +37,24 @@ async function fetchApps() {
             Object.entries(fdroidData.packages).forEach(([pkg, app]) => {
                 if (count >= 100) return;
 
-                const versions = app.versions || [];
-                const latestVersionKey = versions[versions.length - 1];
-                const latestVersion = latestVersionKey ? app.versionsData?.[latestVersionKey] : null;
+                const versionsData = app.versions || {};
+                const versionKeys = Object.keys(versionsData);
+                const latestKey = versionKeys[versionKeys.length - 1];
+                const latestVersion = app.versions?.[latestKey];
+                const manifest = latestVersion?.manifest || {};
+                const permissions = manifest.usesPermission?.map(p => p.name) || [];
 
                 const appData = {
                     name: getLocalizedValue(app.name),
                     summary: getLocalizedValue(app.summary),
+                    description: getLocalizedValue(app.description),
+                    whatsNew: getLocalizedValue(latestVersion?.whatsNew),
                     package: pkg,
-                    version: latestVersion?.versionName || 'N/A',
+                    version: manifest.versionName || 'N/A',
                     categories: app.categories || [],
-                    icon: app.icon ? `https://f-droid.org/repo/${app.icon}` : 'default-icon.png',
-                    download_url: latestVersion?.apkName ? `https://f-droid.org/repo/${latestVersion.apkName}` : '',
-                    permissions: latestVersion?.usesPermissions || []
+                    icon: getIconPath(app, pkg),
+                    download_url: latestVersion?.file?.name ? `https://f-droid.org/repo${latestVersion.file.name}` : '',
+                    permissions: permissions
                 };
 
                 allApps.push(appData);
@@ -78,7 +89,7 @@ function displayApps(apps) {
     );
 
     sortedApps.forEach(app => {
-        const iconPath = app.icon && app.icon.trim() !== '' ? app.icon : 'default-icon.png';
+        const iconPath = app.icon || 'default-icon.png';
         const version = app.version || 'N/A';
         const card = document.createElement('div');
         card.className = 'app-card';
@@ -94,7 +105,7 @@ function displayApps(apps) {
 
 function showAppDetails(app) {
     const details = document.getElementById('app-details');
-    const iconPath = app.icon && app.icon.trim() !== '' ? app.icon : 'default-icon.png';
+    const iconPath = app.icon || 'default-icon.png';
 
     details.innerHTML = `
         <button class="back-button" onclick="hideAppDetails()">← Back</button>
@@ -103,9 +114,11 @@ function showAppDetails(app) {
             <h2>${app.name}</h2>
         </div>
         <p><strong>Package:</strong> ${app.package}</p>
-        <p><strong>Version:</strong> ${app.version || 'N/A'}</p>
+        <p><strong>Version:</strong> ${app.version}</p>
         <p><strong>Categories:</strong> ${Array.isArray(app.categories) ? app.categories.join(', ') : app.categories || 'N/A'}</p>
         <p><strong>Summary:</strong> ${app.summary || 'N/A'}</p>
+        <p><strong>Description:</strong><br>${app.description || 'N/A'}</p>
+        <p><strong>What’s New:</strong><br>${app.whatsNew || 'N/A'}</p>
         <p><strong>Permissions:</strong><br>${Array.isArray(app.permissions) && app.permissions.length ? app.permissions.join('<br>') : 'None'}</p>
         ${app.download_url 
             ? `<button class="install-button" onclick="window.open('${app.download_url}')">Download APK</button>` 
