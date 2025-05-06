@@ -1,5 +1,5 @@
 const CUSTOM_JSON = 'apps.json'; // Your local JSON file
-const FDROID_API = 'https://search.f-droid.org/api/search_apps?q='; // F-Droid Search API
+const FDROID_API = 'https://f-droid.org/api/v1/packages/'; // F-Droid Package Metadata API
 let allApps = [];
 
 function setStatus(message, type, retry = false) {
@@ -13,7 +13,6 @@ async function fetchApps() {
     allApps = [];
 
     let localApps = [];
-    let fdroidApps = [];
 
     // 1. Load from local apps.json
     try {
@@ -26,32 +25,40 @@ async function fetchApps() {
         setStatus('Failed to load local apps', 'error', true);
     }
 
-    // 2. Load from F-Droid API (search all by empty query)
+    // 2. Fetch metadata from F-Droid API for each app
     try {
-        const fdroidResponse = await fetch(`${FDROID_API}`);
-        const fdroidData = await fdroidResponse.json();
-        fdroidApps = fdroidData.apps.map(app => ({
-            name: app.name,
-            package: app.packageName,
-            version: app.suggestedVersionName || 'N/A',
-            icon: app.icon ? `https://f-droid.org${app.icon}` : 'default-icon.png',
-            download_url: app.suggestedApkUrl ? `https://f-droid.org${app.suggestedApkUrl}` : '',
-            categories: app.categories || [],
-            permissions: app.permissions || []
-        }));
-        setStatus('F-Droid apps loaded successfully', 'success');
+        const enrichedApps = await Promise.all(
+            localApps.map(async (app) => {
+                const pkg = app.package;
+                if (!pkg) return app;
+
+                try {
+                    const response = await fetch(`${FDROID_API}${pkg}`);
+                    if (!response.ok) throw new Error(`Failed for ${pkg}`);
+                    const fdroidData = await response.json();
+
+                    return {
+                        ...app,
+                        name: fdroidData.name || app.name,
+                        icon: fdroidData.icon ? `https://f-droid.org${fdroidData.icon}` : app.icon,
+                        version: fdroidData.suggestedVersionName || app.version,
+                        download_url: fdroidData.suggestedApkUrl ? `https://f-droid.org${fdroidData.suggestedApkUrl}` : app.download_url,
+                        categories: fdroidData.categories || app.categories,
+                        permissions: fdroidData.permissions || app.permissions
+                    };
+                } catch (error) {
+                    console.warn(`Could not fetch data for ${pkg}:`, error);
+                    return app;
+                }
+            })
+        );
+
+        allApps = enrichedApps;
+        setStatus('App data loaded', 'success');
     } catch (error) {
         console.error('F-Droid API fetch failed:', error);
-        setStatus('Failed to load F-Droid apps', 'error', true);
+        setStatus('Failed to load app data', 'error', true);
     }
-
-    // 3. Merge both sets, avoiding duplicate packages (local overrides remote)
-    const mergedMap = new Map();
-
-    fdroidApps.forEach(app => mergedMap.set(app.package, app));
-    localApps.forEach(app => mergedMap.set(app.package, app)); // local takes priority
-
-    allApps = Array.from(mergedMap.values());
 
     if (allApps.length > 0) {
         setTimeout(() => setStatus('', ''), 3000);
@@ -132,38 +139,6 @@ function generateCategories(apps) {
     const categories = ['All', ...Array.from(uniqueCategories).sort()];
 
     categories.forEach(category => {
-        const btn = document.createElement('div');
-        btn.className = 'category-chip';
-        btn.textContent = category;
-
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.category-chip').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-
-            if (category === 'All') {
-                displayApps(allApps);
-            } else {
-                const filtered = allApps.filter(app => {
-                    const cats = Array.isArray(app.categories) ? app.categories : [app.categories].filter(c => c);
-                    return cats.map(c => c.trim()).includes(category);
-                });
-                displayApps(filtered);
-            }
-        });
-
-        footer.appendChild(btn);
-    });
-}
-
-document.getElementById('search-button').addEventListener('click', () => {
-    const query = document.getElementById('search-bar').value;
-    searchApps(query);
-});
-
-document.getElementById('search-bar').addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-        searchApps(e.target.value);
-    }
-});
-
-fetchApps();
+       
+::contentReference[oaicite:18]{index=18}
+ 
