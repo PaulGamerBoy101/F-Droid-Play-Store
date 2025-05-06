@@ -1,6 +1,16 @@
 const FDROID_JSON = 'index-v2.json';  // The downloaded F-Droid JSON file
 let allApps = [];
 
+// Helper: Extract first available localized value
+function getLocalizedValue(localizedObj) {
+    if (typeof localizedObj === 'string') return localizedObj;
+    if (typeof localizedObj === 'object' && localizedObj !== null) {
+        const firstLang = Object.keys(localizedObj)[0];
+        return localizedObj[firstLang] || 'Unknown';
+    }
+    return 'Unknown';
+}
+
 function setStatus(message, type, retry = false) {
     const statusDiv = document.getElementById('status-message');
     statusDiv.innerHTML = message + (retry ? ' <button onclick="fetchApps()">Retry</button>' : '');
@@ -22,11 +32,12 @@ async function fetchApps() {
                 if (count >= 100) return;
 
                 const versions = app.versions || [];
-                const latestVersionKey = versions[versions.length - 1];  // Use last version
+                const latestVersionKey = versions[versions.length - 1];
                 const latestVersion = latestVersionKey ? app.versionsData?.[latestVersionKey] : null;
 
                 const appData = {
-                    name: app.name || latestVersion?.appName || pkg,
+                    name: getLocalizedValue(app.name),
+                    summary: getLocalizedValue(app.summary),
                     package: pkg,
                     version: latestVersion?.versionName || 'N/A',
                     categories: app.categories || [],
@@ -94,6 +105,7 @@ function showAppDetails(app) {
         <p><strong>Package:</strong> ${app.package}</p>
         <p><strong>Version:</strong> ${app.version || 'N/A'}</p>
         <p><strong>Categories:</strong> ${Array.isArray(app.categories) ? app.categories.join(', ') : app.categories || 'N/A'}</p>
+        <p><strong>Summary:</strong> ${app.summary || 'N/A'}</p>
         <p><strong>Permissions:</strong><br>${Array.isArray(app.permissions) && app.permissions.length ? app.permissions.join('<br>') : 'None'}</p>
         ${app.download_url 
             ? `<button class="install-button" onclick="window.open('${app.download_url}')">Download APK</button>` 
