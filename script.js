@@ -12,22 +12,29 @@ async function fetchApps() {
     allApps = [];
 
     try {
-        // Fetch the index-v2.json file (F-Droid apps list)
         const response = await fetch(FDROID_JSON);
         const fdroidData = await response.json();
 
         if (fdroidData && fdroidData.packages) {
-            // Loop through the packages and fetch necessary app data
-            fdroidData.packages.forEach(app => {
+            let count = 0;
+
+            Object.entries(fdroidData.packages).forEach(([pkg, app]) => {
+                if (count >= 100) return;
+
+                const latestVersionKey = app.versions?.[0];
+                const latestVersion = latestVersionKey ? app.versionsData?.[latestVersionKey] : null;
+
                 const appData = {
-                    name: app.name,
-                    package: app.package,
-                    version: app.version,
-                    categories: app.categories,
-                    icon: app.icon || 'default-icon.png',  // Handle default icon if missing
-                    download_url: app.download_url || '',  // If download URL is missing
+                    name: app.name || pkg,
+                    package: pkg,
+                    version: latestVersion?.versionName || 'N/A',
+                    categories: app.categories || [],
+                    icon: app.icon ? `https://f-droid.org/repo/${app.icon}` : 'default-icon.png',
+                    download_url: latestVersion?.apkName ? `https://f-droid.org/repo/${latestVersion.apkName}` : ''
                 };
+
                 allApps.push(appData);
+                count++;
             });
 
             setStatus('F-Droid apps loaded successfully', 'success');
