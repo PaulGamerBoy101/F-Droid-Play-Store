@@ -137,7 +137,6 @@ async function fetchApps() {
                     name: data.AutoName || data.Name || appId,
                     package: appId,
                     version: latestBuild.versionName || 'N/A',
-                    icon: 'default-icon.png',
                     categories: data.Categories || [],
                     permissions: latestBuild['uses-permission'] || [],
                     download_url: latestBuild.commit ? `https://f-droid.org/repo/${appId}_${latestBuild.versionCode}.apk` : ''
@@ -181,12 +180,10 @@ function displayApps(apps) {
 
     // Display paginated apps
     paginatedApps.forEach(app => {
-        const iconPath = app.icon;
         const version = app.version || 'N/A';
         const card = document.createElement('div');
         card.className = 'app-card';
         card.innerHTML = `
-            <img src="${iconPath}" alt="${app.name}" onerror="this.src='default-icon.png'">
             <h3>${app.name}</h3>
             <p>Version: ${version}</p>
         `;
@@ -212,11 +209,9 @@ function changePage(page) {
 
 function showAppDetails(app) {
     const details = document.getElementById('app-details');
-    const iconPath = app.icon;
     details.innerHTML = `
         <button class="back-button" onclick="hideAppDetails()">← Back</button>
         <div class="app-details-header">
-            <img src="${iconPath}" alt="${app.name}" onerror="this.src='default-icon.png'">
             <h2>${app.name}</h2>
         </div>
         <p><strong>Package:</strong> ${app.package}</p>
