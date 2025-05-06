@@ -1,5 +1,5 @@
 const CUSTOM_JSON = 'apps.json'; // Your local JSON file
-const FDROID_PROXY = 'https://apt.izzysoft.de/fdroid/repo'; // Update to your proxy URL
+const FDROID_API = 'https://search.f-droid.org/api/search_apps?q='; // F-Droid Search API
 let allApps = [];
 
 function setStatus(message, type, retry = false) {
@@ -12,30 +12,46 @@ async function fetchApps() {
     setStatus('Loading apps...', 'loading');
     allApps = [];
 
+    let localApps = [];
+    let fdroidApps = [];
+
+    // 1. Load from local apps.json
     try {
-        // Fetch local apps.json
         const localResponse = await fetch(CUSTOM_JSON);
         const localData = await localResponse.json();
-        allApps = allApps.concat(localData.apps || []);
+        localApps = localData.apps || [];
         setStatus('Local apps loaded', 'success');
     } catch (error) {
         console.error('Local JSON fetch failed:', error);
         setStatus('Failed to load local apps', 'error', true);
     }
 
+    // 2. Load from F-Droid API (search all by empty query)
     try {
-        // Fetch F-Droid apps from proxy
-        const fdroidResponse = await fetch(FDROID_PROXY);
+        const fdroidResponse = await fetch(`${FDROID_API}`);
         const fdroidData = await fdroidResponse.json();
-        if (fdroidData.error) {
-            throw new Error(fdroidData.error);
-        }
-        allApps = allApps.concat(fdroidData.apps || []);
+        fdroidApps = fdroidData.apps.map(app => ({
+            name: app.name,
+            package: app.packageName,
+            version: app.suggestedVersionName || 'N/A',
+            icon: app.icon ? `https://f-droid.org${app.icon}` : 'default-icon.png',
+            download_url: app.suggestedApkUrl ? `https://f-droid.org${app.suggestedApkUrl}` : '',
+            categories: app.categories || [],
+            permissions: app.permissions || []
+        }));
         setStatus('F-Droid apps loaded successfully', 'success');
     } catch (error) {
-        console.error('F-Droid JSON fetch failed:', error);
+        console.error('F-Droid API fetch failed:', error);
         setStatus('Failed to load F-Droid apps', 'error', true);
     }
+
+    // 3. Merge both sets, avoiding duplicate packages (local overrides remote)
+    const mergedMap = new Map();
+
+    fdroidApps.forEach(app => mergedMap.set(app.package, app));
+    localApps.forEach(app => mergedMap.set(app.package, app)); // local takes priority
+
+    allApps = Array.from(mergedMap.values());
 
     if (allApps.length > 0) {
         setTimeout(() => setStatus('', ''), 3000);
@@ -50,8 +66,7 @@ function displayApps(apps) {
     const appList = document.getElementById('app-list');
     appList.innerHTML = '';
 
-    // Sort apps alphabetically by name (case-insensitive)
-    const sortedApps = [...apps].sort((a, b) => 
+    const sortedApps = [...apps].sort((a, b) =>
         a.name.toLowerCase().localeCompare(b.name.toLowerCase())
     );
 
@@ -117,7 +132,7 @@ function generateCategories(apps) {
     const categories = ['All', ...Array.from(uniqueCategories).sort()];
 
     categories.forEach(category => {
-        const btn = document.createElement('div'); // Changed to div for better styling control
+        const btn = document.createElement('div');
         btn.className = 'category-chip';
         btn.textContent = category;
 
