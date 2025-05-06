@@ -191,15 +191,20 @@ function displayApps(apps) {
         appList.appendChild(card);
     });
 
-    // Add pagination controls
-    const paginationDiv = document.createElement('div');
-    paginationDiv.className = 'pagination';
-    paginationDiv.innerHTML = `
-        <button class="pagination-button" ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">Previous</button>
-        <span>Page ${currentPage} of ${totalPages}</span>
-        <button class="pagination-button" ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">Next</button>
+    // Add or update pagination container
+    let paginationContainer = document.getElementById('pagination-container');
+    if (!paginationContainer) {
+        paginationContainer = document.createElement('div');
+        paginationContainer.id = 'pagination-container';
+        document.querySelector('main').insertBefore(paginationContainer, document.getElementById('app-details'));
+    }
+    paginationContainer.innerHTML = `
+        <div class="pagination">
+            <button class="pagination-button" ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">Previous</button>
+            <span>Page ${currentPage} of ${totalPages}</span>
+            <button class="pagination-button" ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">Next</button>
+        </div>
     `;
-    appList.appendChild(paginationDiv);
 }
 
 function changePage(page) {
