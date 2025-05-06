@@ -21,16 +21,18 @@ async function fetchApps() {
             Object.entries(fdroidData.packages).forEach(([pkg, app]) => {
                 if (count >= 100) return;
 
-                const latestVersionKey = app.versions?.[0];
+                const versions = app.versions || [];
+                const latestVersionKey = versions[versions.length - 1];  // Use last version
                 const latestVersion = latestVersionKey ? app.versionsData?.[latestVersionKey] : null;
 
                 const appData = {
-                    name: app.name || pkg,
+                    name: app.name || latestVersion?.appName || pkg,
                     package: pkg,
                     version: latestVersion?.versionName || 'N/A',
                     categories: app.categories || [],
                     icon: app.icon ? `https://f-droid.org/repo/${app.icon}` : 'default-icon.png',
-                    download_url: latestVersion?.apkName ? `https://f-droid.org/repo/${latestVersion.apkName}` : ''
+                    download_url: latestVersion?.apkName ? `https://f-droid.org/repo/${latestVersion.apkName}` : '',
+                    permissions: latestVersion?.usesPermissions || []
                 };
 
                 allApps.push(appData);
@@ -71,8 +73,8 @@ function displayApps(apps) {
         card.className = 'app-card';
         card.innerHTML = `
             <img src="${iconPath}" alt="${app.name}" onerror="this.src='default-icon.png'">
-            <h3>${app.name}</h3>
-            <p>Version: ${version}</p>
+            <h3 title="${app.name}">${app.name}</h3>
+            <p title="${version}">Version: ${version}</p>
         `;
         card.addEventListener('click', () => showAppDetails(app));
         appList.appendChild(card);
@@ -92,7 +94,7 @@ function showAppDetails(app) {
         <p><strong>Package:</strong> ${app.package}</p>
         <p><strong>Version:</strong> ${app.version || 'N/A'}</p>
         <p><strong>Categories:</strong> ${Array.isArray(app.categories) ? app.categories.join(', ') : app.categories || 'N/A'}</p>
-        <p><strong>Permissions:</strong><br>${Array.isArray(app.permissions) ? app.permissions.join('<br>') : 'None'}</p>
+        <p><strong>Permissions:</strong><br>${Array.isArray(app.permissions) && app.permissions.length ? app.permissions.join('<br>') : 'None'}</p>
         ${app.download_url 
             ? `<button class="install-button" onclick="window.open('${app.download_url}')">Download APK</button>` 
             : '<em>Download not available</em>'
