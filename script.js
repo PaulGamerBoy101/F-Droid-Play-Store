@@ -21,50 +21,68 @@ async function fetchApps() {
     allApps = [];
 
     try {
+        console.log('Fetching:', FDROID_JSON);
         const response = await fetch(FDROID_JSON);
+        console.log('Response:', response.status, response.ok);
+        if (!response.ok) {
+            throw new Error(`HTTP error: ${response.status}`);
+        }
         const fdroidData = await response.json();
+        console.log('Total packages:', Object.keys(fdroidData).length);
 
         let count = 0;
-
+        let skipped = 0;
         Object.entries(fdroidData).forEach(([pkg, app]) => {
-            if (count >= 100) return;
+            // Remove count limit for now
+            // if (count >= 100) return;
 
             const metadata = app.metadata || {};
             const versions = app.versions || {};
             const versionList = Object.values(versions);
 
-            if (versionList.length === 0) return;
+            let latestVersion = {};
+            let manifest = {};
+            if (versionList.length > 0) {
+                try {
+                    latestVersion = versionList.reduce((latest, current) =>
+                        (current.added || 0) > (latest.added || 0) ? current : latest
+                    );
+                    manifest = latestVersion.manifest || {};
+                } catch (e) {
+                    console.error(`Error processing versions for ${pkg}:`, e.message);
+                    skipped++;
+                    return;
+                }
+            } else {
+                console.log(`No versions for ${pkg}, including with fallback`);
+            }
 
-            // Get the latest version by max 'added' timestamp
-            const latestVersion = versionList.reduce((latest, current) =>
-                (current.added || 0) > (latest.added || 0) ? current : latest
-            );
-
-            const manifest = latestVersion.manifest || {};
-            const permissions = manifest.usesPermission?.map(p => p.name) || [];
-
-            const appData = {
-                name: getLocalizedValue(metadata.name),
-                summary: getLocalizedValue(metadata.summary),
-                description: getLocalizedValue(metadata.description),
-                whatsNew: getLocalizedValue(latestVersion.whatsNew),
-                package: pkg,
-                version: manifest.versionName || 'N/A',
-                categories: metadata.categories || [],
-                icon: null, // intentionally skipped
-                download_url: latestVersion.file?.name ? `https://f-droid.org/repo${latestVersion.file.name}` : '',
-                permissions: permissions
-            };
-
-            allApps.push(appData);
-            count++;
+            try {
+                const appData = {
+                    name: getLocalizedValue(metadata.name) || 'Unknown',
+                    summary: getLocalizedValue(metadata.summary) || '',
+                    description: getLocalizedValue(metadata.description) || '',
+                    whatsNew: getLocalizedValue(latestVersion.whatsNew) || '',
+                    package: pkg,
+                    version: manifest.versionName || 'N/A',
+                    categories: metadata.categories || [],
+                    icon: null,
+                    download_url: latestVersion.file?.name ? `https://f-droid.org/repo${latestVersion.file.name}` : '',
+                    permissions: manifest.usesPermission?.map(p => p.name) || []
+                };
+                console.log(`Processed ${pkg}:`, appData.name, appData.version);
+                allApps.push(appData);
+                count++;
+            } catch (e) {
+                console.error(`Error processing ${pkg}:`, e.message);
+                skipped++;
+            }
         });
-
-        setStatus('F-Droid apps loaded successfully', 'success');
-
+        console.log(`Processed ${count} apps, skipped ${skipped}`);
+        setStatus(`Loaded ${count} apps`, 'success');
     } catch (error) {
-        console.error('F-Droid API fetch failed:', error);
-        setStatus('Failed to load F-Droid apps', 'error', true);
+        console.error('Fetch error:', error.message, error.stack);
+        setStatus(`Failed to load apps: ${error.message}`, 'error', true);
     }
 
     if (allApps.length > 0) {
@@ -77,6 +95,7 @@ async function fetchApps() {
 }
 
 function displayApps(apps) {
+    console.log('Displaying', apps.length, 'apps');
     const appList = document.getElementById('app-list');
     appList.innerHTML = '';
 
@@ -85,6 +104,7 @@ function displayApps(apps) {
     );
 
     sortedApps.forEach(app => {
+        console.log('Rendering app:', app.name);
         const version = app.version || 'N/A';
         const card = document.createElement('div');
         card.className = 'app-card';
@@ -99,7 +119,6 @@ function displayApps(apps) {
 
 function showAppDetails(app) {
     const details = document.getElementById('app-details');
-
     details.innerHTML = `
         <button class="back-button" onclick="hideAppDetails()">← Back</button>
         <div class="app-details-header">
