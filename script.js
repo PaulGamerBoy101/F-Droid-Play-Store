@@ -206,6 +206,7 @@ function displayApps(apps) {
         </div>
     `;
     paginationContainer.className = ''; // Ensure pagination is visible
+    document.querySelector('.categories-footer').className = 'categories-footer'; // Ensure categories are visible
 }
 
 function changePage(page) {
@@ -230,6 +231,7 @@ function showAppDetails(app) {
     document.getElementById('app-list').className = 'app-grid hidden';
     document.getElementById('status-message').className = 'status-message hidden';
     document.getElementById('pagination-container').className = 'hidden';
+    document.querySelector('.categories-footer').className = 'categories-footer hidden';
 }
 
 function hideAppDetails() {
@@ -237,6 +239,7 @@ function hideAppDetails() {
     document.getElementById('app-list').className = 'app-grid';
     document.getElementById('status-message').className = 'status-message';
     document.getElementById('pagination-container').className = '';
+    document.querySelector('.categories-footer').className = 'categories-footer';
 }
 
 function searchApps(query) {
