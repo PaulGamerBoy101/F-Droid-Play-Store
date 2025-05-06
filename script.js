@@ -120,6 +120,52 @@ function setStatus(message, type, retry = false) {
     statusDiv.className = `status-message ${type}`;
 }
 
+// Escape HTML to prevent XSS
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// Format description text
+function formatDescription(description) {
+    if (!description || (Array.isArray(description) && description.length === 0)) {
+        return 'No description available';
+    }
+
+    // Handle array or string
+    let lines = Array.isArray(description) ? description : description.split('\n');
+    let html = '';
+    let inList = false;
+
+    lines.forEach(line => {
+        line = line.trim();
+        if (!line) return; // Skip empty lines
+
+        // Handle list items
+        if (line.startsWith('- ') || line.startsWith('* ')) {
+            if (!inList) {
+                html += '<ul>';
+                inList = true;
+            }
+            html += `<li>${escapeHtml(line.slice(2).trim())}</li>`;
+        } else {
+            if (inList) {
+                html += '</ul>';
+                inList = false;
+            }
+            html += `<p>${escapeHtml(line)}</p>`;
+        }
+    });
+
+    // Close list if still open
+    if (inList) {
+        html += '</ul>';
+    }
+
+    return html || 'No description available';
+}
+
 async function fetchApps() {
     setStatus('Loading apps...', 'loading');
     allApps = [];
@@ -139,6 +185,7 @@ async function fetchApps() {
                     version: latestBuild.versionName || 'N/A',
                     categories: data.Categories || [],
                     permissions: latestBuild['uses-permission'] || [],
+                    description: data.Description || '',
                     download_url: latestBuild.commit ? `https://f-droid.org/repo/${appId}_${latestBuild.versionCode}.apk` : ''
                 };
             } catch (error) {
@@ -225,6 +272,7 @@ function showAppDetails(app) {
         <p><strong>Version:</strong> ${app.version || 'N/A'}</p>
         <p><strong>Categories:</strong> ${Array.isArray(app.categories) ? app.categories.join(', ') : app.categories || 'N/A'}</p>
         <p><strong>Permissions:</strong><br>${Array.isArray(app.permissions) ? app.permissions.join('<br>') : 'None'}</p>
+        <div class="app-description"><strong>Description:</strong><br>${formatDescription(app.description)}</div>
         ${app.download_url ? `<button class="install-button" onclick="window.open('${app.download_url}')">Download APK</button>` : '<em>Download not available</em>'}
     `;
     details.className = 'app-details visible';
