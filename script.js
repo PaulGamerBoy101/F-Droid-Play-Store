@@ -1,8 +1,10 @@
 const FDROID_METADATA_URL = 'https://raw.githubusercontent.com/f-droid/fdroiddata/master/metadata/';
-const FDROID_INDEX_URL = 'index-v2.json';
+const FDROID_INDEX_URL = 'https://f-droid.org/repo/index-v1.json';
 let allApps = [];
 let currentPage = 1;
-const ITEMS_PER_PAGE = 10;
+let itemsPerPage = 15; // Default to 15 apps per page
+let displayMode = 'pagination'; // 'pagination' or 'infinite'
+let displayedAppsCount = 0; // Track number of apps displayed in infinite scroll
 
 // Load js-yaml dynamically
 function loadJsYaml() {
@@ -74,7 +76,6 @@ async function fetchAppList() {
         const response = await fetch(FDROID_INDEX_URL);
         if (!response.ok) throw new Error('Failed to fetch F-Droid index');
         const indexData = await response.json();
-        // Extract package IDs from the 'packages' object
         return Object.keys(indexData.packages);
     } catch (error) {
         console.error('Failed to fetch app list:', error);
@@ -85,10 +86,11 @@ async function fetchAppList() {
 async function fetchApps() {
     setStatus('Loading apps...', 'loading');
     allApps = [];
+    currentPage = 1;
+    displayedAppsCount = 0;
 
     try {
         await loadJsYaml();
-        // Fetch all package IDs
         const appIds = await fetchAppList();
         setStatus(`Fetching metadata for ${appIds.length} apps...`, 'loading');
 
@@ -131,43 +133,97 @@ async function fetchApps() {
 
 function displayApps(apps) {
     const appList = document.getElementById('app-list');
-    appList.innerHTML = '';
-
     const sortedApps = [...apps].sort((a, b) => 
         a.name.toLowerCase().localeCompare(b.name.toLowerCase())
     );
 
-    const totalPages = Math.ceil(sortedApps.length / ITEMS_PER_PAGE);
-    currentPage = Math.min(currentPage, totalPages);
-    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    const endIndex = startIndex + ITEMS_PER_PAGE;
-    const paginatedApps = sortedApps.slice(startIndex, endIndex);
+    if (displayMode === 'pagination') {
+        // Pagination mode
+        const totalPages = Math.ceil(sortedApps.length / itemsPerPage);
+        currentPage = Math.min(currentPage, totalPages) || 1;
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const paginatedApps = sortedApps.slice(startIndex, endIndex);
 
-    paginatedApps.forEach(app => {
-        const version = app.version || 'N/A';
-        const card = document.createElement('div');
-        card.className = 'app-card';
-        card.innerHTML = `
-            <h3>${app.name}</h3>
-            <p>Version: ${version}</p>
-        `;
-        card.addEventListener('click', () => showAppDetails(app));
-        appList.appendChild(card);
-    });
+        appList.innerHTML = '';
+        paginatedApps.forEach(app => {
+            const version = app.version || 'N/A';
+            const card = document.createElement('div');
+            card.className = 'app-card';
+            card.innerHTML = `
+                <h3>${app.name}</h3>
+                <p>Version: ${version}</p>
+            `;
+            card.addEventListener('click', () => showAppDetails(app));
+            appList.appendChild(card);
+        });
 
+        updatePaginationControls(sortedApps.length, totalPages);
+    } else {
+        // Infinite scroll mode
+        const loadMoreCount = itemsPerPage; // Load 15 apps at a time in infinite scroll
+        const endIndex = Math.min(displayedAppsCount + loadMoreCount, sortedApps.length);
+        const newApps = sortedApps.slice(displayedAppsCount, endIndex);
+
+        newApps.forEach(app => {
+            const version = app.version || 'N/A';
+            const card = document.createElement('div');
+            card.className = 'app-card';
+            card.innerHTML = `
+                <h3>${app.name}</h3>
+                <p>Version: ${version}</p>
+            `;
+            card.addEventListener('click', () => showAppDetails(app));
+            appList.appendChild(card);
+        });
+
+        displayedAppsCount = endIndex;
+        updatePaginationControls(sortedApps.length, 1); // No pages in infinite scroll
+    }
+}
+
+function updatePaginationControls(totalApps, totalPages) {
     let paginationContainer = document.getElementById('pagination-container');
     if (!paginationContainer) {
         paginationContainer = document.createElement('div');
         paginationContainer.id = 'pagination-container';
         document.querySelector('main').insertBefore(paginationContainer, document.getElementById('app-details'));
     }
-    paginationContainer.innerHTML = `
-        <div class="pagination">
-            <button class="pagination-button" ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">Previous</button>
-            <span>Page ${currentPage} of ${totalPages}</span>
-            <button class="pagination-button" ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">Next</button>
-        </div>
+
+    const options = [
+        { value: '7', label: '7 per page' },
+        { value: '10', label: '10 per page' },
+        { value: '15', label: '15 per page' },
+        { value: '20', label: '20 per page' },
+        { value: '40', label: '40 per page' },
+        { value: '100', label: '100 per page' },
+        { value: 'infinite', label: 'Infinite Scroll' }
+    ];
+
+    const dropdown = `
+        <select id="items-per-page" onchange="changeItemsPerPage(this.value)">
+            ${options.map(opt => `<option value="${opt.value}" ${opt.value === (displayMode === 'infinite' ? 'infinite' : itemsPerPage.toString()) ? 'selected' : ''}>${opt.label}</option>`).join('')}
+        </select>
     `;
+
+    if (displayMode === 'pagination') {
+        paginationContainer.innerHTML = `
+            <div class="pagination">
+                <button class="pagination-button" ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">Previous</button>
+                <span>Page ${currentPage} of ${totalPages}</span>
+                <button class="pagination-button" ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">Next</button>
+                ${dropdown}
+            </div>
+        `;
+    } else {
+        const hasMore = displayedAppsCount < totalApps;
+        paginationContainer.innerHTML = `
+            <div class="pagination">
+                ${hasMore ? `<button class="load-more-button" onclick="loadMoreApps()">Load More</button>` : '<span>All apps loaded</span>'}
+                ${dropdown}
+            </div>
+        `;
+    }
     paginationContainer.className = '';
     document.querySelector('.categories-footer').className = 'categories-footer';
 }
@@ -175,6 +231,46 @@ function displayApps(apps) {
 function changePage(page) {
     currentPage = page;
     displayApps(allApps);
+}
+
+function changeItemsPerPage(value) {
+    currentPage = 1;
+    displayedAppsCount = 0;
+    if (value === 'infinite') {
+        displayMode = 'infinite';
+        itemsPerPage = 15; // Default batch size for infinite scroll
+    } else {
+        displayMode = 'pagination';
+        itemsPerPage = parseInt(value, 10);
+    }
+    displayApps(allApps);
+    if (displayMode === 'infinite') {
+        addScrollListener();
+    } else {
+        removeScrollListener();
+    }
+}
+
+function loadMoreApps() {
+    displayApps(allApps);
+}
+
+function addScrollListener() {
+    window.addEventListener('scroll', handleScroll);
+}
+
+function removeScrollListener() {
+    window.removeEventListener('scroll', handleScroll);
+}
+
+function handleScroll() {
+    const appList = document.getElementById('app-list');
+    const rect = appList.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+    // Load more when the bottom of the app list is within 200px of the viewport
+    if (rect.bottom <= windowHeight + 200 && displayedAppsCount < allApps.length) {
+        loadMoreApps();
+    }
 }
 
 function showAppDetails(app) {
@@ -208,6 +304,7 @@ function hideAppDetails() {
 
 function searchApps(query) {
     currentPage = 1;
+    displayedAppsCount = 0;
     const filteredApps = allApps.filter(app =>
         app.name.toLowerCase().includes(query.toLowerCase()) ||
         app.package.toLowerCase().includes(query.toLowerCase())
@@ -236,6 +333,7 @@ function generateCategories(apps) {
             document.querySelectorAll('.category-chip').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             currentPage = 1;
+            displayedAppsCount = 0;
 
             if (category === 'All') {
                 displayApps(allApps);
