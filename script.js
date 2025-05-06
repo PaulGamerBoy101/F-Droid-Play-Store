@@ -1,100 +1,5 @@
-const FDROID_APPS = [
-    'org.fdroid.fdroid',
-    'org.mozilla.fennec_fdroid',
-    'org.videolan.vlc',
-    'org.telegram.messenger',
-    'com.termux',
-    'com.owncloud.music',
-    'org.vanilla.music',
-    'org.musicplayer.audioplayer.metro',
-    'com.martinmimigames.simpleweather',
-    'org.breezyweather',
-    'com.arcticons.day',
-    'com.arcticons.night',
-    'org.mullvad.mull',
-    'org.fossbrowser',
-    'org.schabi.newpipe',
-    'com.justplayer',
-    'com.vincentengelsoftware.vimusics',
-    'com.infinity.reddit',
-    'org.ya.reddit',
-    'org.kde.kdeconnect_tp',
-    'com.looker.droidify',
-    'ch.protonmail.android',
-    'ch.protonvpn.android',
-    'ch.protonpass',
-    'org.oxycast',
-    'com.kyant.music',
-    'org.pulseaudio.pulseaudio',
-    'org.gateshipone.malp',
-    'com.github.ashutoshgngwp.tidal_music',
-    'org.deepsymmetry.beatlink',
-    'org.fossify.weather',
-    'de.kaffeemitkoffein.tinyweatherforecastgermany',
-    'org.metotrans.apps.weather',
-    'com.joshuacerdenia.android.niceweather',
-    'com.donnnno.arcticons',
-    'com.thomaslowe.iconer',
-    'com.blueheart.icons',
-    'com.rahulvij.icons',
-    'org.torproject.torbrowser',
-    'com.duckduckgo.privacy.browser',
-    'org.privacybrowser',
-    'at.mono.privacybrowser',
-    'org.freebrowser',
-    'org.mpv',
-    'com.github.videolan.vlc_remote',
-    'org.jellyfin.androidtv',
-    'com.unnamed.videoplayer',
-    'org.libretube',
-    'com.github.spotiflyer',
-    'org.strawberry',
-    'com.lemmy',
-    'org.mastodon.android',
-    'org.twidere',
-    'org.joplin',
-    'org.fossify.notes',
-    'org.tasks',
-    'org.fossify.calendar',
-    'at.bitfire.davdroid',
-    'org.koreader',
-    'org.documentfoundation.libreoffice',
-    'org.qownnotes',
-    'org.ankidroid',
-    'org.orgzly',
-    'org.adaway',
-    'com.beemdevelopment.aegis',
-    'org.bitwarden',
-    'org.personal.dnsfilter',
-    'org.mollyim.android',
-    'org.twinhelix.signal',
-    'org.tutanota',
-    'org.vigilante',
-    'org.trackercontrol',
-    'org.island',
-    'com.mixplorer',
-    'org.fossify.filemanager',
-    'com.wa2c.android.cifsdocumentsprovider',
-    'org.rcx',
-    'org.materialfiles',
-    'com.fsck.k9',
-    'org.fairemail',
-    'org.simpleemail',
-    'org.kde.ktrip',
-    'org.kde.maui.station',
-    'org.kde.maui.calculator',
-    'org.kde.maui.note',
-    'org.osmand',
-    'org.openstreetcomplete',
-    'org.organicmaps',
-    'org.connectbot',
-    'org.gadgetbridge',
-    'org.antennapod',
-    'org.florisboard',
-    'org.simplegallery',
-    'org.pdfconverter'
-];
 const FDROID_METADATA_URL = 'https://raw.githubusercontent.com/f-droid/fdroiddata/master/metadata/';
+const FDROID_INDEX_URL = 'index-v2.json';
 let allApps = [];
 let currentPage = 1;
 const ITEMS_PER_PAGE = 10;
@@ -133,16 +38,14 @@ function formatDescription(description) {
         return 'No description available';
     }
 
-    // Handle array or string
     let lines = Array.isArray(description) ? description : description.split('\n');
     let html = '';
     let inList = false;
 
     lines.forEach(line => {
         line = line.trim();
-        if (!line) return; // Skip empty lines
+        if (!line) return;
 
-        // Handle list items
         if (line.startsWith('- ') || line.startsWith('* ')) {
             if (!inList) {
                 html += '<ul>';
@@ -158,12 +61,25 @@ function formatDescription(description) {
         }
     });
 
-    // Close list if still open
     if (inList) {
         html += '</ul>';
     }
 
     return html || 'No description available';
+}
+
+// Fetch the list of all app package IDs from index-v1.json
+async function fetchAppList() {
+    try {
+        const response = await fetch(FDROID_INDEX_URL);
+        if (!response.ok) throw new Error('Failed to fetch F-Droid index');
+        const indexData = await response.json();
+        // Extract package IDs from the 'packages' object
+        return Object.keys(indexData.packages);
+    } catch (error) {
+        console.error('Failed to fetch app list:', error);
+        throw error;
+    }
 }
 
 async function fetchApps() {
@@ -172,7 +88,11 @@ async function fetchApps() {
 
     try {
         await loadJsYaml();
-        const appPromises = FDROID_APPS.map(async (appId) => {
+        // Fetch all package IDs
+        const appIds = await fetchAppList();
+        setStatus(`Fetching metadata for ${appIds.length} apps...`, 'loading');
+
+        const appPromises = appIds.map(async (appId) => {
             try {
                 const response = await fetch(`${FDROID_METADATA_URL}${appId}.yml`);
                 if (!response.ok) throw new Error(`Failed to fetch ${appId}.yml`);
@@ -213,19 +133,16 @@ function displayApps(apps) {
     const appList = document.getElementById('app-list');
     appList.innerHTML = '';
 
-    // Sort apps alphabetically
     const sortedApps = [...apps].sort((a, b) => 
         a.name.toLowerCase().localeCompare(b.name.toLowerCase())
     );
 
-    // Calculate pagination
     const totalPages = Math.ceil(sortedApps.length / ITEMS_PER_PAGE);
     currentPage = Math.min(currentPage, totalPages);
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
     const endIndex = startIndex + ITEMS_PER_PAGE;
     const paginatedApps = sortedApps.slice(startIndex, endIndex);
 
-    // Display paginated apps
     paginatedApps.forEach(app => {
         const version = app.version || 'N/A';
         const card = document.createElement('div');
@@ -238,7 +155,6 @@ function displayApps(apps) {
         appList.appendChild(card);
     });
 
-    // Add or update pagination container
     let paginationContainer = document.getElementById('pagination-container');
     if (!paginationContainer) {
         paginationContainer = document.createElement('div');
@@ -252,8 +168,8 @@ function displayApps(apps) {
             <button class="pagination-button" ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">Next</button>
         </div>
     `;
-    paginationContainer.className = ''; // Ensure pagination is visible
-    document.querySelector('.categories-footer').className = 'categories-footer'; // Ensure categories are visible
+    paginationContainer.className = '';
+    document.querySelector('.categories-footer').className = 'categories-footer';
 }
 
 function changePage(page) {
@@ -291,7 +207,7 @@ function hideAppDetails() {
 }
 
 function searchApps(query) {
-    currentPage = 1; // Reset to first page on search
+    currentPage = 1;
     const filteredApps = allApps.filter(app =>
         app.name.toLowerCase().includes(query.toLowerCase()) ||
         app.package.toLowerCase().includes(query.toLowerCase())
@@ -319,7 +235,7 @@ function generateCategories(apps) {
         btn.addEventListener('click', () => {
             document.querySelectorAll('.category-chip').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            currentPage = 1; // Reset to first page on category change
+            currentPage = 1;
 
             if (category === 'All') {
                 displayApps(allApps);
