@@ -192,5 +192,7 @@ document.getElementById('search-bar').addEventListener('keypress', (e) => {
     }
 });
 
-// Initialize
-fetchApps();
+window.addEventListener('DOMContentLoaded', () => {
+    fetchApps();
+});
+
