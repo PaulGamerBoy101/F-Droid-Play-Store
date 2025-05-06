@@ -99,6 +99,7 @@ header {
     font-size: 13px;
     color: #5f6368;
     margin: 0;
+    overflow: visible; /* Ensure text is not clipped */
 }
 
 /* --- PAGINATION --- */
