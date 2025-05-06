@@ -86,12 +86,13 @@ header {
 .app-card h3 {
     font-size: 15px;
     font-weight: 500;
-    margin: 0 0 6px;
+    margin: 0 0 8px;
     text-align: center;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: normal; /* Allow text to wrap */
+    word-break: break-word; /* Break long words if necessary */
+    overflow: visible; /* Ensure text is not clipped */
     width: 100%;
+    line-height: 1.4; /* Improve readability */
 }
 
 .app-card p {
@@ -253,36 +254,41 @@ header {
 /* --- CATEGORIES --- */
 .categories-footer {
     background: #fff;
-    padding: 16px;
-    margin: 0 auto;
+    padding: 20px 16px;
+    margin: 16px auto;
     max-width: 1200px;
+    border-radius: 12px; /* Rounded corners */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* Softer shadow */
     position: sticky;
-    bottom: 0;
+    bottom: 16px;
     z-index: 10;
-    box-shadow: 0 -1px 3px rgba(0,0,0,0.1);
 }
 
 .categories-footer h4 {
     font-size: 16px;
     font-weight: 500;
-    margin: 0 0 8px;
+    margin: 0 0 12px;
     color: #202124;
+    padding-left: 8px;
 }
 
 .category-chip {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
     background: #f1f3f4;
     color: #1a73e8;
-    padding: 6px 12px;
-    border-radius: 16px;
+    padding: 8px 16px; /* Increased padding for better touch targets */
+    border-radius: 20px; /* More rounded chips */
     font-size: 13px;
+    font-weight: 500;
     margin: 4px;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s, transform 0.2s;
 }
 
 .category-chip:hover {
     background: #e8eaed;
+    transform: translateY(-1px); /* Subtle lift on hover */
 }
 
 .category-chip.active {
@@ -304,6 +310,7 @@ header {
 
     .app-card h3 {
         font-size: 14px;
+        line-height: 1.3;
     }
 
     .app-card p {
@@ -334,5 +341,16 @@ header {
     .pagination-button {
         padding: 6px 12px;
         font-size: 13px;
+    }
+
+    .categories-footer {
+        padding: 16px 8px;
+        margin: 8px auto;
+        border-radius: 8px;
+    }
+
+    .category-chip {
+        padding: 6px 12px;
+        font-size: 12px;
     }
 }
