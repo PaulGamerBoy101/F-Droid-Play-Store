@@ -45,15 +45,15 @@ async function fetchApps() {
                 const yamlText = await response.text();
                 const data = jsyaml.load(yamlText);
 
-                // Transform YAML to app format
+                // Transform YAML to app format, omitting icon
                 const latestBuild = data.Builds && data.Builds.length > 0 ? data.Builds[data.Builds.length - 1] : {};
                 return {
                     name: data.AutoName || data.Name || appId,
                     package: appId,
                     version: latestBuild.versionName || 'N/A',
-                    icon: data.Icon ? `https://f-droid.org/repo/icons/${data.Icon}` : 'default-icon.png',
+                    icon: 'default-icon.png', // Always use default icon
                     categories: data.Categories || [],
-                    permissions: latestBuild.usesPermissions || [],
+                    permissions: latestBuild['uses-permission'] || [],
                     download_url: latestBuild.commit ? `https://f-droid.org/repo/${appId}_${latestBuild.versionCode}.apk` : ''
                 };
             } catch (error) {
@@ -87,7 +87,7 @@ function displayApps(apps) {
     );
 
     sortedApps.forEach(app => {
-        const iconPath = app.icon && app.icon.trim() !== '' ? app.icon : 'default-icon.png';
+        const iconPath = app.icon; // Always 'default-icon.png'
         const version = app.version || 'N/A';
         const card = document.createElement('div');
         card.className = 'app-card';
@@ -103,7 +103,7 @@ function displayApps(apps) {
 
 function showAppDetails(app) {
     const details = document.getElementById('app-details');
-    const iconPath = app.icon && app.icon.trim() !== '' ? app.icon : 'default-icon.png';
+    const iconPath = app.icon; // Always 'default-icon.png'
     details.innerHTML = `
         <button class="back-button" onclick="hideAppDetails()">← Back</button>
         <div class="app-details-header">
