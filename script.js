@@ -1,5 +1,5 @@
 const FDROID_METADATA_URL = 'https://raw.githubusercontent.com/f-droid/fdroiddata/master/metadata/';
-const FDROID_INDEX_URL = 'https://f-droid.org/repo/index-v1.json';
+const FDROID_INDEX_URL = 'index-v2.json';
 let allApps = [];
 let currentPage = 1;
 let itemsPerPage = 15; // Default to 15 apps per page
