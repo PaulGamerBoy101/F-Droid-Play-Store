@@ -1,14 +1,14 @@
 body {
     font-family: 'Roboto', Arial, sans-serif;
     margin: 0;
-    background-color: #f1f3f4;
+    background-color: #f5f5f5;
 }
 
 /* --- HEADER --- */
 header {
     background-color: #fff;
-    padding: 10px 24px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 12px 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     position: sticky;
     top: 0;
     z-index: 10;
@@ -20,30 +20,30 @@ header {
 .header-left {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
 }
 
 #logo {
-    height: 32px;
+    height: 28px;
     width: auto;
 }
 
 .search-container {
     display: flex;
     align-items: center;
-    background-color: #e8eaed;
-    border-radius: 24px;
-    padding: 8px 16px;
-    max-width: 600px;
+    background-color: #f1f3f4;
+    border-radius: 22px;
+    padding: 6px 12px;
     width: 100%;
-    margin-left: 24px;
+    max-width: 500px;
+    margin-left: 16px;
 }
 
 #search-bar {
     flex: 1;
     border: none;
     background: none;
-    font-size: 16px;
+    font-size: 15px;
     outline: none;
 }
 
@@ -51,142 +51,178 @@ header {
     border: none;
     background: none;
     cursor: pointer;
-    font-size: 18px;
+    font-size: 16px;
+    color: #5f6368;
 }
 
 /* --- APP GRID --- */
 .app-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
     padding: 16px;
     max-width: 1200px;
     margin: 0 auto;
-    justify-content: center;
-    align-items: center;
 }
 
 .app-card {
     background: #fff;
-    border-radius: 8px;
+    border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
     cursor: pointer;
-    transition: transform 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s;
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 12px;
 }
 
 .app-card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
 }
 
 .app-card img {
-    width: 100%;
-    max-height: 150px;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 8px;
     object-fit: contain;
-    background: #f1f1f1;
+    background: #f8f8f8;
+    border-radius: 8px;
 }
 
 .app-card h3 {
-    font-size: 16px;
-    margin: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    margin: 0 0 4px;
+    text-align: center;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    width: 100%;
 }
 
 .app-card p {
-    font-size: 14px;
+    font-size: 12px;
     color: #5f6368;
-    margin: 0 8px 8px;
-    text-align: center;
+    margin: 0;
+}
+
+/* --- PAGINATION --- */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    margin: 16px 0;
+}
+
+.pagination-button {
+    background: #1a73e8;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+.pagination-button:hover:not(:disabled) {
+    background: #1557b0;
+}
+
+.pagination-button:disabled {
+    background: #e8eaed;
+    color: #80868b;
+    cursor: not-allowed;
+}
+
+.pagination span {
+    font-size: 14px;
+    color: #3c4043;
 }
 
 /* --- APP DETAILS --- */
 .app-details {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    max-width: 600px;
+    margin: 16px auto;
     background: #fff;
+    border-radius: 12px;
     padding: 16px;
-    overflow-y: auto;
-    z-index: 20;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    text-align: center;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.1);
 }
 
 .app-details.visible {
-    display: flex;
+    display: block;
 }
 
 .app-details-header {
     display: flex;
-    flex-direction: column;
     align-items: center;
+    gap: 16px;
     margin-bottom: 16px;
 }
 
 .app-details-header img {
-    width: 96px;
-    height: 96px;
-    border-radius: 16px;
-    margin-bottom: 12px;
+    width: 72px;
+    height: 72px;
+    border-radius: 12px;
     object-fit: contain;
-    background-color: #f1f1f1;
+    background: #f8f8f8;
 }
 
 .app-details h2 {
-    font-size: 24px;
-    margin: 0 0 8px;
+    font-size: 20px;
+    font-weight: 500;
+    margin: 0;
 }
 
 .app-details p {
-    font-size: 15px;
+    font-size: 14px;
     color: #3c4043;
-    margin: 4px 0;
+    margin: 8px 0;
+    line-height: 1.5;
 }
 
 .app-details .install-button {
-    background-color: #00c853;
+    background: #00c853;
     color: #fff;
     border: none;
     padding: 10px 24px;
-    border-radius: 4px;
+    border-radius: 20px;
     cursor: pointer;
-    font-size: 16px;
-    margin: 16px 0;
+    font-size: 14px;
+    font-weight: 500;
+    margin: 12px 0;
+    width: 100%;
+    max-width: 200px;
 }
 
 .app-details .install-button:hover {
-    background-color: #00b140;
+    background: #00a846;
 }
 
 .back-button {
     background: none;
     border: none;
-    font-size: 18px;
+    font-size: 16px;
     cursor: pointer;
-    position: absolute;
-    top: 16px;
-    left: 16px;
     color: #1a73e8;
+    font-weight: 500;
+    margin-bottom: 12px;
 }
 
 /* --- STATUS MESSAGE --- */
 .status-message {
     text-align: center;
-    padding: 16px;
-    font-size: 16px;
+    padding: 12px;
+    font-size: 14px;
     color: #202124;
+    margin: 8px auto;
+    max-width: 1200px;
 }
 
 .status-message.loading {
@@ -208,31 +244,88 @@ header {
 /* --- CATEGORIES --- */
 .categories-footer {
     background: #fff;
-    border-top: 1px solid #ddd;
     padding: 16px;
-    margin-bottom: 10px;
-    text-align: center;
+    margin: 0 auto;
+    max-width: 1200px;
+    position: sticky;
     bottom: 0;
+    z-index: 10;
+    box-shadow: 0 -1px 3px rgba(0,0,0,0.1);
 }
 
 .categories-footer h4 {
-    font-size: 18px;
-    margin-bottom: 12px;
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0 0 8px;
     color: #202124;
 }
 
 .category-chip {
     display: inline-block;
-    background-color: #e8f0fe;
+    background: #f1f3f4;
     color: #1a73e8;
     padding: 6px 12px;
     border-radius: 16px;
-    font-size: 14px;
+    font-size: 13px;
     margin: 4px;
     cursor: pointer;
     transition: background-color 0.2s;
 }
 
 .category-chip:hover {
-    background-color: #d2e3fc;
+    background: #e8eaed;
+}
+
+.category-chip.active {
+    background: #1a73e8;
+    color: #fff;
+}
+
+/* --- RESPONSIVE DESIGN --- */
+@media (max-width: 600px) {
+    .app-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 8px;
+        padding: 8px;
+    }
+
+    .app-card {
+        padding: 8px;
+    }
+
+    .app-card img {
+        width: 48px;
+        height: 48px;
+    }
+
+    .app-card h3 {
+        font-size: 13px;
+    }
+
+    .app-card p {
+        font-size: 11px;
+    }
+
+    .search-container {
+        margin-left: 8px;
+        padding: 4px 8px;
+    }
+
+    #search-bar {
+        font-size: 14px;
+    }
+
+    .app-details-header img {
+        width: 64px;
+        height: 64px;
+    }
+
+    .app-details h2 {
+        font-size: 18px;
+    }
+
+    .pagination-button {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
 }
