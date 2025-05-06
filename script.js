@@ -1,11 +1,11 @@
 const CUSTOM_JSON = 'apps.json'; // Your local JSON file
-const FDROID_PROXY = 'https://plug-mirror.rcac.purdue.edu/fdroid/repo/'; // Update to your proxy URL
+const FDROID_PROXY = 'https://apt.izzysoft.de/fdroid/repo'; // Update to your proxy URL
 let allApps = [];
 
 function setStatus(message, type, retry = false) {
     const statusDiv = document.getElementById('status-message');
     statusDiv.innerHTML = message + (retry ? ' <button onclick="fetchApps()">Retry</button>' : '');
-    statusDiv.className = status-message ${type};
+    statusDiv.className = `status-message ${type}`;
 }
 
 async function fetchApps() {
@@ -50,8 +50,7 @@ function displayApps(apps) {
     const appList = document.getElementById('app-list');
     appList.innerHTML = '';
 
-    // Sort apps alphabetically by name (case-insensitive)
-    const sortedApps = [...apps].sort((a, b) => 
+    const sortedApps = [...apps].sort((a, b) =>
         a.name.toLowerCase().localeCompare(b.name.toLowerCase())
     );
 
@@ -60,11 +59,11 @@ function displayApps(apps) {
         const version = app.version || 'N/A';
         const card = document.createElement('div');
         card.className = 'app-card';
-        card.innerHTML = 
+        card.innerHTML = `
             <img src="${iconPath}" alt="${app.name}" onerror="this.src='default-icon.png'">
             <h3>${app.name}</h3>
             <p>Version: ${version}</p>
-        ;
+        `;
         card.addEventListener('click', () => showAppDetails(app));
         appList.appendChild(card);
     });
@@ -73,7 +72,8 @@ function displayApps(apps) {
 function showAppDetails(app) {
     const details = document.getElementById('app-details');
     const iconPath = app.icon && app.icon.trim() !== '' ? app.icon : 'default-icon.png';
-    details.innerHTML = 
+
+    details.innerHTML = `
         <button class="back-button" onclick="hideAppDetails()">← Back</button>
         <div class="app-details-header">
             <img src="${iconPath}" alt="${app.name}" onerror="this.src='default-icon.png'">
@@ -83,8 +83,11 @@ function showAppDetails(app) {
         <p><strong>Version:</strong> ${app.version || 'N/A'}</p>
         <p><strong>Categories:</strong> ${Array.isArray(app.categories) ? app.categories.join(', ') : app.categories || 'N/A'}</p>
         <p><strong>Permissions:</strong><br>${Array.isArray(app.permissions) ? app.permissions.join('<br>') : 'None'}</p>
-        ${app.download_url ? <button class="install-button" onclick="window.open('${app.download_url}')">Download APK</button> : '<em>Download not available</em>'}
-    ;
+        ${app.download_url 
+            ? `<button class="install-button" onclick="window.open('${app.download_url}')">Download APK</button>` 
+            : '<em>Download not available</em>'
+        }
+    `;
     details.className = 'app-details visible';
     document.getElementById('app-list').className = 'app-grid hidden';
     document.getElementById('status-message').className = 'status-message hidden';
@@ -117,7 +120,7 @@ function generateCategories(apps) {
     const categories = ['All', ...Array.from(uniqueCategories).sort()];
 
     categories.forEach(category => {
-        const btn = document.createElement('div'); // Changed to div for better styling control
+        const btn = document.createElement('div');
         btn.className = 'category-chip';
         btn.textContent = category;
 
@@ -140,6 +143,7 @@ function generateCategories(apps) {
     });
 }
 
+// Search functionality
 document.getElementById('search-button').addEventListener('click', () => {
     const query = document.getElementById('search-bar').value;
     searchApps(query);
@@ -151,4 +155,5 @@ document.getElementById('search-bar').addEventListener('keypress', (e) => {
     }
 });
 
+// Initialize
 fetchApps();
