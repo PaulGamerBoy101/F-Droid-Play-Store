@@ -1,9 +1,30 @@
 const FDROID_APPS = [
-    'org.fdroid.fdroid',
-    'org.mozilla.fennec_fdroid',
-    'org.videolan.vlc',
-    'org.telegram.messenger',
-    'com.termux'
+    // Original Apps
+    'org.fdroid.fdroid',           // F-Droid client (App Store)
+    'org.mozilla.fennec_fdroid',   // Fennec Browser (Browser)
+    'org.videolan.vlc',            // VLC (Video/Music Player)
+    'org.telegram.messenger',      // Telegram (Messaging)
+    'com.termux',                  // Termux (Terminal Emulator)
+    // Music Players
+    'com.owncloud.music',          // Nextcloud Music
+    'org.vanilla.music',           // Vanilla Music
+    'org.musicplayer.audioplayer.metro', // Metro
+    // Weather Apps
+    'com.martinmimigames.simpleweather', // Simple Weather
+    'org.breezyweather',           // Breezy Weather
+    // Icon Packs
+    'com.arcticons.day',           // Arcticons Day
+    'com.arcticons.night',         // Arcticons Night
+    // Browsers
+    'org.mullvad.mull',            // Mull
+    'org.fossbrowser',             // FOSS Browser
+    // Video Players / YouTube
+    'org.schabi.newpipe',          // NewPipe (YouTube/Video Player)
+    'com.justplayer',              // Just Video Player
+    // YouTube Music / Reddit Clients
+    'com.vincentengelsoftware.vimusics', // ViMusic (YouTube Music)
+    'com.infinity.reddit',         // Infinity for Reddit
+    'org.ya.reddit'                // Dawn for Reddit
 ];
 const FDROID_METADATA_URL = 'https://raw.githubusercontent.com/f-droid/fdroiddata/master/metadata/';
 let allApps = [];
