@@ -1,5 +1,4 @@
-const CUSTOM_JSON = 'apps.json'; // Your local JSON file
-const FDROID_PROXY = 'https://apt.izzysoft.de/fdroid/repo'; // Update to your proxy URL
+const FDROID_JSON = 'index-v2.json';  // The downloaded F-Droid JSON file
 let allApps = [];
 
 function setStatus(message, type, retry = false) {
@@ -13,27 +12,31 @@ async function fetchApps() {
     allApps = [];
 
     try {
-        // Fetch local apps.json
-        const localResponse = await fetch(CUSTOM_JSON);
-        const localData = await localResponse.json();
-        allApps = allApps.concat(localData.apps || []);
-        setStatus('Local apps loaded', 'success');
-    } catch (error) {
-        console.error('Local JSON fetch failed:', error);
-        setStatus('Failed to load local apps', 'error', true);
-    }
+        // Fetch the index-v2.json file (F-Droid apps list)
+        const response = await fetch(FDROID_JSON);
+        const fdroidData = await response.json();
 
-    try {
-        // Fetch F-Droid apps from proxy
-        const fdroidResponse = await fetch(FDROID_PROXY);
-        const fdroidData = await fdroidResponse.json();
-        if (fdroidData.error) {
-            throw new Error(fdroidData.error);
+        if (fdroidData && fdroidData.packages) {
+            // Loop through the packages and fetch necessary app data
+            fdroidData.packages.forEach(app => {
+                const appData = {
+                    name: app.name,
+                    package: app.package,
+                    version: app.version,
+                    categories: app.categories,
+                    icon: app.icon || 'default-icon.png',  // Handle default icon if missing
+                    download_url: app.download_url || '',  // If download URL is missing
+                };
+                allApps.push(appData);
+            });
+
+            setStatus('F-Droid apps loaded successfully', 'success');
+        } else {
+            throw new Error('Invalid F-Droid JSON format');
         }
-        allApps = allApps.concat(fdroidData.apps || []);
-        setStatus('F-Droid apps loaded successfully', 'success');
+
     } catch (error) {
-        console.error('F-Droid JSON fetch failed:', error);
+        console.error('F-Droid API fetch failed:', error);
         setStatus('Failed to load F-Droid apps', 'error', true);
     }
 
