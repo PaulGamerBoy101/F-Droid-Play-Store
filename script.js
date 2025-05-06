@@ -1,5 +1,5 @@
 const CUSTOM_JSON = 'apps.json'; // Your local JSON file
-const FDROID_PROXY = 'https://apt.izzysoft.de/fdroid/repo'; // Update to your proxy URL
+const FDROID_PROXY = 'https://plug-mirror.rcac.purdue.edu/fdroid/repo/'; // Update to your proxy URL
 let allApps = [];
 
 function setStatus(message, type, retry = false) {
