@@ -41,10 +41,10 @@ async function fetchApps() {
                 name: pkgData.name || pkgName,
                 package: pkgName,
                 version: versionData.versionName || 'N/A',
-                icon: `https://f-droid.org/repo/${pkgData.icon || 'icon.png'}`, // Adjust path as needed
+                icon: `https://f-droid.org/repo/${pkgData.icon || 'icon.png'}`,
                 permissions: versionData.usesPermissions || [],
                 categories: pkgData.categories || [],
-                download_url: `https://f-droid.org/repo/${versionData.apkName}` // Adjust base URL if using a proxy
+                download_url: `https://f-droid.org/repo/${versionData.apkName}`
             };
 
             allApps.push(appEntry);
@@ -55,6 +55,16 @@ async function fetchApps() {
         console.error('F-Droid JSON fetch failed:', error);
         setStatus('Failed to load F-Droid apps', 'error', true);
     }
+
+    if (allApps.length > 0) {
+        setTimeout(() => setStatus('', ''), 3000);
+        displayApps(allApps);
+        generateCategories(allApps);
+    } else {
+        setStatus('No apps loaded', 'error', true);
+    }
+}
+
 
 function displayApps(apps) {
     const appList = document.getElementById('app-list');
