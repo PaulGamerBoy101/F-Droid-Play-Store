@@ -75,7 +75,7 @@ header {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 12px;
+    padding: 16px;
 }
 
 .app-card:hover {
@@ -83,19 +83,10 @@ header {
     box-shadow: 0 4px 12px rgba(0,0,0,0.12);
 }
 
-.app-card img {
-    width: 64px;
-    height: 64px;
-    margin-bottom: 8px;
-    object-fit: contain;
-    background: #f8f8f8;
-    border-radius: 8px;
-}
-
 .app-card h3 {
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 500;
-    margin: 0 0 4px;
+    margin: 0 0 6px;
     text-align: center;
     white-space: nowrap;
     overflow: hidden;
@@ -104,7 +95,7 @@ header {
 }
 
 .app-card p {
-    font-size: 12px;
+    font-size: 13px;
     color: #5f6368;
     margin: 0;
 }
@@ -161,23 +152,16 @@ header {
 
 .app-details-header {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 16px;
     margin-bottom: 16px;
 }
 
-.app-details-header img {
-    width: 72px;
-    height: 72px;
-    border-radius: 12px;
-    object-fit: contain;
-    background: #f8f8f8;
-}
-
 .app-details h2 {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 500;
     margin: 0;
+    text-align: center;
 }
 
 .app-details p {
@@ -290,20 +274,15 @@ header {
     }
 
     .app-card {
-        padding: 8px;
-    }
-
-    .app-card img {
-        width: 48px;
-        height: 48px;
+        padding: 12px;
     }
 
     .app-card h3 {
-        font-size: 13px;
+        font-size: 14px;
     }
 
     .app-card p {
-        font-size: 11px;
+        font-size: 12px;
     }
 
     .search-container {
@@ -315,13 +294,12 @@ header {
         font-size: 14px;
     }
 
-    .app-details-header img {
-        width: 64px;
-        height: 64px;
+    .app-details h2 {
+        font-size: 20px;
     }
 
-    .app-details h2 {
-        font-size: 18px;
+    .app-details p {
+        font-size: 13px;
     }
 
     .pagination-button {
