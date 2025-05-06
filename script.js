@@ -1,63 +1,40 @@
 const CUSTOM_JSON = 'apps.json'; // Your local JSON file
-const FDROID_API = 'https://f-droid.org/api/v1/packages/'; // F-Droid Package Metadata API
+const FDROID_PROXY = 'https://apt.izzysoft.de/fdroid/repo'; // Update to your proxy URL
 let allApps = [];
 
 function setStatus(message, type, retry = false) {
     const statusDiv = document.getElementById('status-message');
     statusDiv.innerHTML = message + (retry ? ' <button onclick="fetchApps()">Retry</button>' : '');
-    statusDiv.className = `status-message ${type}`;
+    statusDiv.className = status-message ${type};
 }
 
 async function fetchApps() {
     setStatus('Loading apps...', 'loading');
     allApps = [];
 
-    let localApps = [];
-
-    // 1. Load from local apps.json
     try {
+        // Fetch local apps.json
         const localResponse = await fetch(CUSTOM_JSON);
         const localData = await localResponse.json();
-        localApps = localData.apps || [];
+        allApps = allApps.concat(localData.apps || []);
         setStatus('Local apps loaded', 'success');
     } catch (error) {
         console.error('Local JSON fetch failed:', error);
         setStatus('Failed to load local apps', 'error', true);
     }
 
-    // 2. Fetch metadata from F-Droid API for each app
     try {
-        const enrichedApps = await Promise.all(
-            localApps.map(async (app) => {
-                const pkg = app.package;
-                if (!pkg) return app;
-
-                try {
-                    const response = await fetch(`${FDROID_API}${pkg}`);
-                    if (!response.ok) throw new Error(`Failed for ${pkg}`);
-                    const fdroidData = await response.json();
-
-                    return {
-                        ...app,
-                        name: fdroidData.name || app.name,
-                        icon: fdroidData.icon ? `https://f-droid.org${fdroidData.icon}` : app.icon,
-                        version: fdroidData.suggestedVersionName || app.version,
-                        download_url: fdroidData.suggestedApkUrl ? `https://f-droid.org${fdroidData.suggestedApkUrl}` : app.download_url,
-                        categories: fdroidData.categories || app.categories,
-                        permissions: fdroidData.permissions || app.permissions
-                    };
-                } catch (error) {
-                    console.warn(`Could not fetch data for ${pkg}:`, error);
-                    return app;
-                }
-            })
-        );
-
-        allApps = enrichedApps;
-        setStatus('App data loaded', 'success');
+        // Fetch F-Droid apps from proxy
+        const fdroidResponse = await fetch(FDROID_PROXY);
+        const fdroidData = await fdroidResponse.json();
+        if (fdroidData.error) {
+            throw new Error(fdroidData.error);
+        }
+        allApps = allApps.concat(fdroidData.apps || []);
+        setStatus('F-Droid apps loaded successfully', 'success');
     } catch (error) {
-        console.error('F-Droid API fetch failed:', error);
-        setStatus('Failed to load app data', 'error', true);
+        console.error('F-Droid JSON fetch failed:', error);
+        setStatus('Failed to load F-Droid apps', 'error', true);
     }
 
     if (allApps.length > 0) {
@@ -73,7 +50,8 @@ function displayApps(apps) {
     const appList = document.getElementById('app-list');
     appList.innerHTML = '';
 
-    const sortedApps = [...apps].sort((a, b) =>
+    // Sort apps alphabetically by name (case-insensitive)
+    const sortedApps = [...apps].sort((a, b) => 
         a.name.toLowerCase().localeCompare(b.name.toLowerCase())
     );
 
@@ -82,11 +60,11 @@ function displayApps(apps) {
         const version = app.version || 'N/A';
         const card = document.createElement('div');
         card.className = 'app-card';
-        card.innerHTML = `
+        card.innerHTML = 
             <img src="${iconPath}" alt="${app.name}" onerror="this.src='default-icon.png'">
             <h3>${app.name}</h3>
             <p>Version: ${version}</p>
-        `;
+        ;
         card.addEventListener('click', () => showAppDetails(app));
         appList.appendChild(card);
     });
@@ -95,7 +73,7 @@ function displayApps(apps) {
 function showAppDetails(app) {
     const details = document.getElementById('app-details');
     const iconPath = app.icon && app.icon.trim() !== '' ? app.icon : 'default-icon.png';
-    details.innerHTML = `
+    details.innerHTML = 
         <button class="back-button" onclick="hideAppDetails()">← Back</button>
         <div class="app-details-header">
             <img src="${iconPath}" alt="${app.name}" onerror="this.src='default-icon.png'">
@@ -105,8 +83,8 @@ function showAppDetails(app) {
         <p><strong>Version:</strong> ${app.version || 'N/A'}</p>
         <p><strong>Categories:</strong> ${Array.isArray(app.categories) ? app.categories.join(', ') : app.categories || 'N/A'}</p>
         <p><strong>Permissions:</strong><br>${Array.isArray(app.permissions) ? app.permissions.join('<br>') : 'None'}</p>
-        ${app.download_url ? `<button class="install-button" onclick="window.open('${app.download_url}')">Download APK</button>` : '<em>Download not available</em>'}
-    `;
+        ${app.download_url ? <button class="install-button" onclick="window.open('${app.download_url}')">Download APK</button> : '<em>Download not available</em>'}
+    ;
     details.className = 'app-details visible';
     document.getElementById('app-list').className = 'app-grid hidden';
     document.getElementById('status-message').className = 'status-message hidden';
@@ -139,6 +117,38 @@ function generateCategories(apps) {
     const categories = ['All', ...Array.from(uniqueCategories).sort()];
 
     categories.forEach(category => {
-       
-::contentReference[oaicite:18]{index=18}
- 
+        const btn = document.createElement('div'); // Changed to div for better styling control
+        btn.className = 'category-chip';
+        btn.textContent = category;
+
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.category-chip').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            if (category === 'All') {
+                displayApps(allApps);
+            } else {
+                const filtered = allApps.filter(app => {
+                    const cats = Array.isArray(app.categories) ? app.categories : [app.categories].filter(c => c);
+                    return cats.map(c => c.trim()).includes(category);
+                });
+                displayApps(filtered);
+            }
+        });
+
+        footer.appendChild(btn);
+    });
+}
+
+document.getElementById('search-button').addEventListener('click', () => {
+    const query = document.getElementById('search-bar').value;
+    searchApps(query);
+});
+
+document.getElementById('search-bar').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        searchApps(e.target.value);
+    }
+});
+
+fetchApps();
