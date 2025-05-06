@@ -5,7 +5,7 @@ const FDROID_APPS = [
     'org.telegram.messenger',
     'com.termux'
 ];
-const FDROID_METADATA_URL = 'https://gitlab.com/fdroid/fdroiddata/-/raw/master/metadata/';
+const FDROID_METADATA_URL = 'https://raw.githubusercontent.com/f-droid/fdroiddata/master/metadata/';
 let allApps = [];
 
 // Load js-yaml dynamically
