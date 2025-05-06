@@ -11,12 +11,6 @@ function getLocalizedValue(localizedObj) {
     return 'Unknown';
 }
 
-// Helper: Extract icon path from nested structure
-function getIconPath(app, pkg) {
-    const path = app.icon?.['en-US']?.name || app.icon?.name;
-    return path ? `https://f-droid.org/repo${path}` : 'default-icon.png';
-}
-
 function setStatus(message, type, retry = false) {
     const statusDiv = document.getElementById('status-message');
     statusDiv.innerHTML = message + (retry ? ' <button onclick="fetchApps()">Retry</button>' : '');
@@ -52,7 +46,7 @@ async function fetchApps() {
                     package: pkg,
                     version: manifest.versionName || 'N/A',
                     categories: app.categories || [],
-                    icon: getIconPath(app, pkg),
+                    icon: null, // icon removed
                     download_url: latestVersion?.file?.name ? `https://f-droid.org/repo${latestVersion.file.name}` : '',
                     permissions: permissions
                 };
@@ -89,12 +83,10 @@ function displayApps(apps) {
     );
 
     sortedApps.forEach(app => {
-        const iconPath = app.icon || 'default-icon.png';
         const version = app.version || 'N/A';
         const card = document.createElement('div');
         card.className = 'app-card';
         card.innerHTML = `
-            <img src="${iconPath}" alt="${app.name}" onerror="this.src='default-icon.png'">
             <h3 title="${app.name}">${app.name}</h3>
             <p title="${version}">Version: ${version}</p>
         `;
@@ -105,12 +97,10 @@ function displayApps(apps) {
 
 function showAppDetails(app) {
     const details = document.getElementById('app-details');
-    const iconPath = app.icon || 'default-icon.png';
 
     details.innerHTML = `
         <button class="back-button" onclick="hideAppDetails()">← Back</button>
         <div class="app-details-header">
-            <img src="${iconPath}" alt="${app.name}" onerror="this.src='default-icon.png'">
             <h2>${app.name}</h2>
         </div>
         <p><strong>Package:</strong> ${app.package}</p>
@@ -192,7 +182,7 @@ document.getElementById('search-bar').addEventListener('keypress', (e) => {
     }
 });
 
+// Initialize only once when DOM is ready
 window.addEventListener('DOMContentLoaded', () => {
     fetchApps();
 });
-
