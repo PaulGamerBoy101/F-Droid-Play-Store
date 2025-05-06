@@ -205,6 +205,7 @@ function displayApps(apps) {
             <button class="pagination-button" ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">Next</button>
         </div>
     `;
+    paginationContainer.className = ''; // Ensure pagination is visible
 }
 
 function changePage(page) {
@@ -228,12 +229,14 @@ function showAppDetails(app) {
     details.className = 'app-details visible';
     document.getElementById('app-list').className = 'app-grid hidden';
     document.getElementById('status-message').className = 'status-message hidden';
+    document.getElementById('pagination-container').className = 'hidden';
 }
 
 function hideAppDetails() {
     document.getElementById('app-details').className = 'app-details hidden';
     document.getElementById('app-list').className = 'app-grid';
     document.getElementById('status-message').className = 'status-message';
+    document.getElementById('pagination-container').className = '';
 }
 
 function searchApps(query) {
